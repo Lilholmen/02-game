@@ -1,7 +1,11 @@
 import styles from './Card.module.css';
 
-const Card = () => {
-  return <div>Card</div>;
+const Card = ({ value, color }) => {
+  return (
+    <div className={styles.card} style={{ backgroundColor: color }}>
+      {value}
+    </div>
+  );
 };
 
 export default Card;

@@ -1,10 +1,12 @@
 import Card from './Card';
 import styles from './Board.module.css';
 
-const Board = () => {
+const Board = ({ cards }) => {
   return (
-    <div>
-      <Card />
+    <div className={styles.board}>
+      {cards.map((card) => (
+        <Card key={card.id} value={card.value} color={card.color} />
+      ))}
     </div>
   );
 };

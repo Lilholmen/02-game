@@ -1,0 +1,6 @@
+.board {
+  max-width: 800px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #a8a29e;
+}
