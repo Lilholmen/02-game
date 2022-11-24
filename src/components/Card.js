@@ -1,9 +1,15 @@
 import styles from './Card.module.css';
 
-const Card = ({ value, color }) => {
+const Card = ({ card, toggleChecked, markGuessed }) => {
   return (
-    <div className={styles.card} style={{ backgroundColor: color }}>
-      {value}
+    <div
+      style={
+        card.isChecked || card.isGuessed ? { backgroundColor: card.color } : {}
+      }
+      className={styles.card}
+      onClick={() => toggleChecked(card.id)}
+    >
+      {card.value}
     </div>
   );
 };

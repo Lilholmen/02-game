@@ -1,6 +1,9 @@
 .card {
   width: 170px;
   height: 200px;
-  background-color: #facc15;
   margin: 10px;
+  background-color: #44403c;
+}
+
+.checked {
 }

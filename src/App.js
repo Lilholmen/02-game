@@ -41,11 +41,33 @@ function App() {
     setCards(cardsArray);
   };
 
+  const toggleCheckedHandler = (id) => {
+    setCards(
+      cards.map((card) =>
+        card.id === id ? { ...card, isChecked: !card.isChecked } : card
+      )
+    );
+  };
+
+  const markGuessedHandler = (value) => {
+    setCards(
+      setCards(
+        cards.map((card) =>
+          card.value === value ? { ...card, isGuessed: true } : card
+        )
+      )
+    );
+  };
+
   useEffect(() => initiateCards(), []);
 
   return (
     <div className="App">
-      <Board cards={cards} />
+      <Board
+        cards={cards}
+        toggleChecked={toggleCheckedHandler}
+        markGuessed={markGuessedHandler}
+      />
       <Info />
     </div>
   );
