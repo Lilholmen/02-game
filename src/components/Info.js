@@ -1,7 +1,7 @@
 import styles from './Info.module.css';
 
-const Info = () => {
-  return <div className={styles.info}>Info</div>;
+const Info = ({ score }) => {
+  return <div className={styles.info}>{score}</div>;
 };
 
 export default Info;

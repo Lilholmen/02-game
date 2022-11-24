@@ -7,6 +7,8 @@ const CARDS_COUNT = 16;
 
 function App() {
   const [cards, setCards] = useState([]);
+  const [checked, setChecked] = useState([]);
+  const [steps, setSteps] = useState(0);
 
   const colors = [
     '#7F1D1D',
@@ -26,7 +28,7 @@ function App() {
         : Math.abs(countRequest) + 1;
 
     const cardsArray = [];
-    console.log(cardsCount);
+
     for (let i = 0; i < cardsCount; i++) {
       cardsArray.push({
         id: i + 1,
@@ -59,7 +61,26 @@ function App() {
     );
   };
 
+  const guessHandler = (id) => {
+    toggleCheckedHandler(id);
+
+    console.log(checked.length);
+
+    setChecked([...checked, cards.find((card) => card.id === id)]);
+  };
+
   useEffect(() => initiateCards(), []);
+  useEffect(() => {
+    if (checked.length >= 2) {
+      setSteps(steps + 1);
+      setChecked([]);
+      setCards(
+        cards.map(function (card) {
+          return { ...card, isChecked: false };
+        })
+      );
+    }
+  }, [checked]);
 
   return (
     <div className="App">
@@ -67,8 +88,9 @@ function App() {
         cards={cards}
         toggleChecked={toggleCheckedHandler}
         markGuessed={markGuessedHandler}
+        guess={guessHandler}
       />
-      <Info />
+      <Info score={steps} />
     </div>
   );
 }
