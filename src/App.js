@@ -81,7 +81,7 @@ function App() {
         )
       );
 
-      setChecked([]);
+      setChecked([checked[2]]);
     }
   }, [checked]);
 
