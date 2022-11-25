@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Board from './components/Board';
-import Info from './components/Info';
+import Header from './components/Header';
 import './App.css';
 
 const CARDS_COUNT = 16;
@@ -8,7 +8,7 @@ const CARDS_COUNT = 16;
 function App() {
   const [cards, setCards] = useState([]);
   const [checked, setChecked] = useState([]);
-  const [steps, setSteps] = useState(0);
+  const [score, setScore] = useState(0);
 
   const colors = [
     '#7F1D1D',
@@ -67,10 +67,13 @@ function App() {
 
   useEffect(() => initiateCards(), []);
   useEffect(() => {
-    if (checked.length === 2 && checked[0].value === checked[1].value) {
-      markGuessed(checked[0].value);
+    if (checked.length === 2) {
+      if (checked[0].value === checked[1].value) {
+        markGuessed(checked[0].value);
 
-      setChecked([]);
+        setChecked([]);
+      }
+      setScore(score + 1);
     }
     if (checked.length === 3) {
       setCards(
@@ -87,8 +90,8 @@ function App() {
 
   return (
     <div className="App">
+      <Header score={score} total={CARDS_COUNT / 2} />
       <Board cards={cards} guess={guessHandler} />
-      <Info score={steps} />
     </div>
   );
 }

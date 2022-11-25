@@ -1,0 +1,36 @@
+.header {
+  height: 128px;
+  background-color: #292524;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 50px;
+  color: #f5f5f4;
+  font-size: 36px;
+  font-family: 'Anek Latin', sans-serif;
+}
+
+.info {
+  height: 100%;
+  display: flex;
+}
+
+.score {
+  min-width: 180px;
+  padding: 18px;
+  border-right: 1px solid #f5f5f4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 58px;
+}
+
+.settings {
+  min-width: 180px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
