@@ -2,8 +2,21 @@
   width: 170px;
   height: 200px;
   margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #44403c;
+  color: #d6d3d1;
+  font-size: 48px;
+  transition: background-color 300ms linear;
+  cursor: pointer;
 }
 
-.checked {
+.cardChecked {
+  transition: background-color 300ms linear;
+}
+
+.cardGuessed {
+  border: 3px solid #d6d3d1;
+  transition: background-color 300ms linear;
 }

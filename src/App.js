@@ -43,53 +43,51 @@ function App() {
     setCards(cardsArray);
   };
 
-  const toggleCheckedHandler = (id) => {
+  const markChecked = (id) => {
     setCards(
       cards.map((card) =>
-        card.id === id ? { ...card, isChecked: !card.isChecked } : card
+        card.id === id ? { ...card, isChecked: true } : card
       )
     );
   };
 
-  const markGuessedHandler = (value) => {
+  const markGuessed = (value) => {
     setCards(
-      setCards(
-        cards.map((card) =>
-          card.value === value ? { ...card, isGuessed: true } : card
-        )
+      cards.map((card) =>
+        card.value === value ? { ...card, isGuessed: true } : card
       )
     );
   };
 
   const guessHandler = (id) => {
-    toggleCheckedHandler(id);
-
-    console.log(checked.length);
+    markChecked(id);
 
     setChecked([...checked, cards.find((card) => card.id === id)]);
   };
 
   useEffect(() => initiateCards(), []);
   useEffect(() => {
-    if (checked.length >= 2) {
-      setSteps(steps + 1);
+    if (checked.length === 2 && checked[0].value === checked[1].value) {
+      markGuessed(checked[0].value);
+
       setChecked([]);
+    }
+    if (checked.length === 3) {
       setCards(
-        cards.map(function (card) {
-          return { ...card, isChecked: false };
-        })
+        cards.map((card) =>
+          card.id === checked[0].id || card.id === checked[1].id
+            ? { ...card, isChecked: false }
+            : card
+        )
       );
+
+      setChecked([]);
     }
   }, [checked]);
 
   return (
     <div className="App">
-      <Board
-        cards={cards}
-        toggleChecked={toggleCheckedHandler}
-        markGuessed={markGuessedHandler}
-        guess={guessHandler}
-      />
+      <Board cards={cards} guess={guessHandler} />
       <Info score={steps} />
     </div>
   );
