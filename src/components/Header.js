@@ -1,7 +1,7 @@
 import { BsQuestionSquare, BsCheckSquare } from 'react-icons/bs';
 import styles from './Header.module.css';
 
-const Header = ({ score, total }) => {
+const Header = ({ score, correct, total }) => {
   return (
     <div className={styles.header}>
       <div className={styles.info}>
@@ -11,7 +11,9 @@ const Header = ({ score, total }) => {
         </div>
         <div className={styles.score}>
           <BsCheckSquare />
-          <span>0 / {total}</span>
+          <span>
+            {correct} / {total}
+          </span>
         </div>
       </div>
       <div className={styles.title}>Find The Pair</div>

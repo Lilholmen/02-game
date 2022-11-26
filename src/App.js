@@ -9,6 +9,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [checked, setChecked] = useState([]);
   const [score, setScore] = useState(0);
+  const [correct, setCorrect] = useState(0);
 
   const colors = [
     '#7F1D1D',
@@ -72,6 +73,7 @@ function App() {
         markGuessed(checked[0].value);
 
         setChecked([]);
+        setCorrect(correct + 1);
       }
       setScore(score + 1);
     }
@@ -89,8 +91,8 @@ function App() {
   }, [checked]);
 
   return (
-    <div className="App">
-      <Header score={score} total={CARDS_COUNT / 2} />
+    <div className='App'>
+      <Header score={score} correct={correct} total={CARDS_COUNT / 2} />
       <Board cards={cards} guess={guessHandler} />
     </div>
   );
