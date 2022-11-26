@@ -7,14 +7,14 @@ import {
 import Button from './UI/Button';
 import styles from './Header.module.css';
 
-const Header = ({ score, correct, total }) => {
+const Header = ({ score, correct, total, change, restart }) => {
   return (
     <div className={styles.header}>
       <div className={styles.settings}>
-        <Button>
+        <Button action={() => change(2)}>
           <BsGridFill />
         </Button>
-        <Button>
+        <Button action={restart}>
           <BsArrowClockwise />
         </Button>
       </div>
