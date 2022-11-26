@@ -107,7 +107,7 @@ function App() {
         change={changeLevel}
         restart={restartLevel}
       />
-      <Board cards={cards} guess={guessHandler} />
+      <Board cards={cards} level={level.current} guess={guessHandler} />
     </div>
   );
 }

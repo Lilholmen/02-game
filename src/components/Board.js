@@ -1,7 +1,7 @@
 import Card from './Card';
 import styles from './Board.module.css';
 
-const Board = ({ cards, guess }) => {
+const Board = ({ cards, guess, level }) => {
   return (
     <div className={styles.board}>
       {cards.map((card) => (
