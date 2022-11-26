@@ -10,7 +10,7 @@ const Card = ({ card, guess }) => {
       className={`${styles.card} ${card.isChecked ? styles.cardChecked : ''}`}
       onClick={card.isChecked ? () => {} : () => guess(card.id)}
     >
-      {card.value}
+      {/* {card.value} */}
     </div>
   );
 };

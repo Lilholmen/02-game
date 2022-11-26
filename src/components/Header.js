@@ -1,9 +1,24 @@
-import { BsQuestionSquare, BsCheckSquare } from 'react-icons/bs';
+import {
+  BsQuestionSquare,
+  BsCheckSquare,
+  BsArrowClockwise,
+  BsGridFill,
+} from 'react-icons/bs';
+import Button from './UI/Button';
 import styles from './Header.module.css';
 
 const Header = ({ score, correct, total }) => {
   return (
     <div className={styles.header}>
+      <div className={styles.settings}>
+        <Button>
+          <BsGridFill />
+        </Button>
+        <Button>
+          <BsArrowClockwise />
+        </Button>
+      </div>
+
       <div className={styles.info}>
         <div className={styles.score}>
           <BsQuestionSquare />
@@ -16,8 +31,8 @@ const Header = ({ score, correct, total }) => {
           </span>
         </div>
       </div>
-      <div className={styles.title}>Find The Pair</div>
-      <div className={styles.settings}>Button</div>
+
+      <div className={styles.title}>00 : 00</div>
     </div>
   );
 };

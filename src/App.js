@@ -90,6 +90,12 @@ function App() {
     }
   }, [checked]);
 
+  useEffect(() => {
+    if (correct === CARDS_COUNT / 2) {
+      console.log('WIN');
+    }
+  }, [correct]);
+
   return (
     <div className='App'>
       <Header score={score} correct={correct} total={CARDS_COUNT / 2} />
