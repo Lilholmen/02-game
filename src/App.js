@@ -42,10 +42,12 @@ function App() {
 
   const changeLevel = (transitionalLevel) => {
     setLevel({ ...level, current: levels[transitionalLevel] });
+    resetScore();
   };
 
   const restartLevel = () => {
     setLevel({ ...level });
+    resetScore();
   };
 
   useEffect(() => {
@@ -97,6 +99,11 @@ function App() {
       console.log('WIN');
     }
   }, [correct]);
+
+  const resetScore = () => {
+    setScore(0);
+    setCorrect(0);
+  };
 
   return (
     <div className='App'>
