@@ -22,17 +22,18 @@ const Header = ({ score, correct, total, change, restart }) => {
       <div className={styles.info}>
         <div className={styles.score}>
           <BsQuestionSquare />
-          <span>{score}</span>
+          <div>{score}</div>
         </div>
+        <div className={styles.separator}></div>
         <div className={styles.score}>
           <BsCheckSquare />
-          <span>
+          <div>
             {correct} / {total}
-          </span>
+          </div>
         </div>
       </div>
 
-      <div className={styles.title}>00 : 00</div>
+      <div className={styles.timer}>00 : 00</div>
     </div>
   );
 };
