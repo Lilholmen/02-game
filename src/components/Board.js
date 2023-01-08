@@ -1,11 +1,14 @@
-import Card from './Card';
-import styles from './Board.module.css';
+import Card from "./Card";
 
 const Board = ({ cards, guess, level }) => {
   return (
-    <div className={styles.board}>
+    <div className="mt-6 flex h-full flex-wrap justify-center">
       {cards.map((card) => (
-        <Card key={card.id} card={card} guess={guess} />
+        <Card
+          key={card.id}
+          card={card}
+          guess={guess}
+        />
       ))}
     </div>
   );

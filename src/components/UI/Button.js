@@ -1,8 +1,10 @@
-import styles from './Button.module.css';
-
 const Button = ({ children, action }) => {
   return (
-    <button className={styles.button} type='button' onClick={action}>
+    <button
+      className="flex items-center justify-center bg-transparent text-7xl text-neutral-200"
+      type="button"
+      onClick={action}
+    >
       {children}
     </button>
   );

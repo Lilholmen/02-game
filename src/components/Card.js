@@ -1,16 +1,15 @@
-import { FaCheck } from 'react-icons/fa';
-import styles from './Card.module.css';
+import { FaCheck } from "react-icons/fa";
 
 const Card = ({ card, guess }) => {
-  return card.isGuessed ? (
-    <div className={`${styles.card} ${styles.cardGuessed}`}>{<FaCheck />}</div>
-  ) : (
+  return (
     <div
-      style={card.isChecked ? { backgroundColor: card.color } : {}}
-      className={`${styles.card} ${card.isChecked ? styles.cardChecked : ''}`}
+      className="m-3 flex h-1/5 basis-1/5 cursor-pointer items-center justify-center bg-neutral-800 text-5xl text-neutral-200 transition-colors duration-300"
+      style={
+        card.isChecked || card.isGuessed ? { backgroundColor: card.color } : {}
+      }
       onClick={card.isChecked ? () => {} : () => guess(card.id)}
     >
-      {card.value}
+      {card.isGuessed ? <FaCheck /> : card.value}
     </div>
   );
 };
