@@ -1,21 +1,33 @@
-import { useEffect, useState } from "react";
-import Board from "./components/Board";
-import Header from "./components/Header";
+import { useEffect, useState } from 'react';
+import Board from './components/Board';
+import Header from './components/Header';
+import Modal from './components/Modal';
 
-import levels from "./data/levels";
-import colors from "./data/colors";
+import levels from './data/levels';
+import colors from './data/colors';
 
-const STARTING_LEVEL = 4;
+const STARTING_LEVEL = 1;
+const LAST_LEVEL = 5;
 
 const App = () => {
   const [cards, setCards] = useState([]);
   const [checked, setChecked] = useState([]);
-  const [score, setScore] = useState(0);
-  const [correct, setCorrect] = useState(0);
-  const [level, setLevel] = useState({
-    isPlaying: true,
-    current: levels[STARTING_LEVEL],
+  const [levelInfo, setLevelInfo] = useState({
+    isCompleted: false,
+    correct: 0,
+    score: 0,
   });
+  const [currentLevel, setCurrentLevel] = useState(
+    levels.find((level) => level.id === STARTING_LEVEL)
+  );
+
+  const resetLevelInfo = () => {
+    setLevelInfo({
+      isCompleted: false,
+      correct: 0,
+      score: 0,
+    });
+  };
 
   const markChecked = (id) => {
     setCards(
@@ -40,20 +52,22 @@ const App = () => {
   };
 
   const changeLevel = (transitionalLevel) => {
-    setLevel({ ...level, current: levels[transitionalLevel] });
-    resetScore();
+    setCurrentLevel(levels.find((level) => level.id === transitionalLevel));
+
+    resetLevelInfo();
   };
 
   const restartLevel = () => {
-    setLevel({ ...level });
-    resetScore();
+    setCurrentLevel({ ...currentLevel });
+
+    resetLevelInfo();
   };
 
   useEffect(() => {
     const initiateCards = () => {
       const cardsArray = [];
 
-      for (let i = 0; i < level.current.amount; i++) {
+      for (let i = 0; i < currentLevel.amount; i++) {
         cardsArray.push({
           id: i + 1,
           value: Math.floor(i / 2),
@@ -68,7 +82,7 @@ const App = () => {
     };
 
     initiateCards();
-  }, [level]);
+  }, [currentLevel]);
 
   useEffect(() => {
     if (checked.length === 2) {
@@ -76,9 +90,14 @@ const App = () => {
         markGuessed(checked[0].value);
 
         setChecked([]);
-        setCorrect(correct + 1);
+        setLevelInfo({
+          ...levelInfo,
+          correct: levelInfo.correct + 1,
+          score: levelInfo.score + 1,
+        });
+      } else {
+        setLevelInfo({ ...levelInfo, score: levelInfo.score + 1 });
       }
-      setScore(score + 1);
     }
     if (checked.length === 3) {
       setCards(
@@ -93,31 +112,34 @@ const App = () => {
     }
   }, [checked]);
 
-  useEffect(() => {
-    if (correct === level.current.pairs) {
-      console.log("WIN");
-    }
-  }, [correct]);
-
-  const resetScore = () => {
-    setScore(0);
-    setCorrect(0);
-  };
-
   return (
-    <div className="App flex h-screen flex-col bg-neutral-200">
+    <div className='App flex h-screen flex-col bg-neutral-200'>
+      {levelInfo.correct === currentLevel.pairs
+        ? (levelInfo.isCompleted = true)
+        : null}
+      <Modal
+        restart={restartLevel}
+        nextLevel={
+          currentLevel.id < LAST_LEVEL
+            ? () => changeLevel(currentLevel.id + 1)
+            : false
+        }
+        levelInfo={{
+          ...levelInfo,
+          currentId: currentLevel.id,
+          currentAmount: currentLevel.amount,
+        }}
+      />
+
       <Header
-        score={score}
-        correct={correct}
-        total={level.current.pairs}
+        score={levelInfo.score}
+        correct={levelInfo.correct}
+        total={currentLevel.pairs}
         change={changeLevel}
         restart={restartLevel}
       />
-      <Board
-        cards={cards}
-        level={level.current}
-        guess={guessHandler}
-      />
+
+      <Board cards={cards} guess={guessHandler} />
     </div>
   );
 };

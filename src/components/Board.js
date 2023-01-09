@@ -1,14 +1,10 @@
-import Card from "./Card";
+import Card from './Card';
 
-const Board = ({ cards, guess, level }) => {
+const Board = ({ cards, guess }) => {
   return (
-    <div className="mt-6 flex h-full flex-wrap justify-center">
+    <div className='mt-6 flex h-full flex-wrap justify-center'>
       {cards.map((card) => (
-        <Card
-          key={card.id}
-          card={card}
-          guess={guess}
-        />
+        <Card key={card.id} card={card} guess={guess} />
       ))}
     </div>
   );
