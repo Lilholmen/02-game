@@ -52,7 +52,7 @@ const Modal = ({ message = "You WIN!", restart, nextLevel, levelInfo }) => {
                   <ModalButton
                     text="Next Level"
                     isDisabled={!nextLevel}
-                    action={nextLevel ? nextLevel : () => {}} //ugly, need to be changed
+                    action={nextLevel || (() => {})}
                   />
                 </div>
               </div>
