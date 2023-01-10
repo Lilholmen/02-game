@@ -1,7 +1,7 @@
 const Button = ({ children, action }) => {
   return (
     <button
-      className="flex items-center justify-center bg-transparent text-7xl text-neutral-200"
+      className="flex items-center justify-center bg-transparent"
       type="button"
       onClick={action}
     >

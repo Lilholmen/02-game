@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import Board from './components/Board';
-import Header from './components/Header';
-import Modal from './components/Modal';
+import { useEffect, useState } from "react";
+import Board from "./components/Board";
+import Header from "./components/Header";
+import Modal from "./components/Modal";
 
-import levels from './data/levels';
-import colors from './data/colors';
+import levels from "./data/levels";
+import colors from "./data/colors";
 
 const STARTING_LEVEL = 1;
 const LAST_LEVEL = 5;
@@ -113,7 +113,7 @@ const App = () => {
   }, [checked]);
 
   return (
-    <div className='App flex h-screen flex-col bg-neutral-200'>
+    <div className="App flex h-screen flex-col bg-neutral-200 font-sans-serif">
       {levelInfo.correct === currentLevel.pairs
         ? (levelInfo.isCompleted = true)
         : null}
@@ -139,7 +139,10 @@ const App = () => {
         restart={restartLevel}
       />
 
-      <Board cards={cards} guess={guessHandler} />
+      <Board
+        cards={cards}
+        guess={guessHandler}
+      />
     </div>
   );
 };
