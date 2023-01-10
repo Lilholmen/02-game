@@ -113,7 +113,7 @@ const App = () => {
   }, [checked]);
 
   return (
-    <div className="App flex h-screen flex-col bg-neutral-200 font-sans-serif">
+    <div className="App flex h-screen flex-col font-sans-serif text-stone-200">
       {levelInfo.correct === currentLevel.pairs
         ? (levelInfo.isCompleted = true)
         : null}
