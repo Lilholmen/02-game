@@ -6,6 +6,7 @@ import Modal from "./components/Modal";
 import levels from "./data/levels";
 import colors from "./data/colors";
 import LevelMenu from "./components/LevelMenu";
+import Footer from "./components/Footer";
 
 const STARTING_LEVEL = 1;
 const LAST_LEVEL = 5;
@@ -107,7 +108,7 @@ const App = () => {
   }, [gameStatus.currentLevel]);
 
   return (
-    <div className="App flex h-screen flex-col overflow-y-auto overflow-x-hidden font-sans-main text-stone-200">
+    <div className="App flex h-screen flex-col font-sans-main text-stone-200">
       {levelInfo.correct === gameStatus.currentLevel.pairs
         ? (levelInfo.isCompleted = true)
         : null}
@@ -140,6 +141,8 @@ const App = () => {
         cards={cards}
         guess={checkHandler}
       />
+
+      <Footer />
     </div>
   );
 };

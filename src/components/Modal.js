@@ -5,7 +5,7 @@ const Modal = ({ message = "You WIN!", restart, nextLevel, levelInfo }) => {
     <>
       {levelInfo.isCompleted ? (
         <>
-          <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden font-sans-modal outline-none focus:outline-none">
+          <div className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto overflow-x-hidden font-sans-modal outline-none focus:outline-none">
             <div className="relative mx-auto my-6 w-auto">
               <div className="relative flex w-full flex-col rounded-xl bg-slate-800 text-slate-200">
                 <div className="border-b border-amber-500 p-5">
@@ -59,7 +59,7 @@ const Modal = ({ message = "You WIN!", restart, nextLevel, levelInfo }) => {
             </div>
           </div>
 
-          <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
+          <div className="fixed inset-0 z-30 bg-black opacity-25"></div>
         </>
       ) : null}
     </>
