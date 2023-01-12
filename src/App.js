@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import Board from "./components/Board";
 import Header from "./components/Header";
 import Modal from "./components/Modal";
@@ -6,8 +7,11 @@ import LevelMenu from "./components/LevelMenu";
 import Footer from "./components/Footer";
 import Timer from "./components/Timer";
 
-import levels from "./data/levels";
-import colors from "./data/colors";
+import getLevelsFromLocalStorage from "./components/utilities/getLevelsFromLocalStorage";
+import initiateCards from "./components/utilities/initiateCards";
+import writeRecord from "./components/utilities/writeRecord";
+
+const levels = getLevelsFromLocalStorage();
 
 const STARTING_LEVEL = 1;
 const LAST_LEVEL = levels.length;
@@ -103,26 +107,25 @@ const App = () => {
     }
   };
 
-  const initiateCards = (cardsAmount) => {
-    const cardsArray = [];
+  useEffect(() => {
+    initiateCards(gameStatus.currentLevel.amount, setCards);
+  }, [gameStatus.currentLevel]);
 
-    for (let i = 0; i < cardsAmount; i++) {
-      cardsArray.push({
-        id: i + 1,
-        value: Math.floor(i / 2),
-        color: colors[Math.floor(i / 2)],
-        isChecked: false,
-        isGuessed: false,
-      });
+  const writeLocal = (id) => {
+    const currentLevel = levels.find((level) => level.id === id);
+
+    if (currentLevel.bestTime === null && currentLevel.bestTry === null) {
+      currentLevel.bestTime = levelInfo.time;
+      currentLevel.bestTry = levelInfo.score;
+    } else {
+      if (levelInfo.time < currentLevel.bestTime)
+        currentLevel.bestTime = levelInfo.time;
+      if (levelInfo.score < currentLevel.bestTry)
+        currentLevel.bestTry = levelInfo.score;
     }
 
-    cardsArray.sort(() => Math.floor(Math.random() - 0.5));
-    setCards(cardsArray);
+    window.localStorage.setItem("levels", JSON.stringify(levels));
   };
-
-  useEffect(() => {
-    initiateCards(gameStatus.currentLevel.amount);
-  }, [gameStatus.currentLevel]);
 
   return (
     <div className="App flex h-screen flex-col font-sans-main text-stone-200">
@@ -137,7 +140,10 @@ const App = () => {
           ...levelInfo,
           currentId: gameStatus.currentLevel.id,
           currentAmount: gameStatus.currentLevel.amount,
+          bestTime: gameStatus.currentLevel.bestTime,
+          bestTry: gameStatus.currentLevel.bestTry,
         }}
+        save={writeLocal}
       />
 
       <Header
@@ -155,7 +161,10 @@ const App = () => {
       </Header>
 
       {gameStatus.shownLevelMenu ? (
-        <LevelMenu switchLevel={switchLevel} />
+        <LevelMenu
+          switchLevel={switchLevel}
+          levels={levels}
+        />
       ) : null}
 
       <Board
