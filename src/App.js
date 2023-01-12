@@ -25,9 +25,22 @@ const App = () => {
   const [cards, setCards] = useState([]);
   const [onCheck, setOnCheck] = useState(null);
 
+  const levelMenuHandler = () => {
+    setGameStatus({
+      ...gameStatus,
+      shownLevelMenu: !gameStatus.shownLevelMenu,
+    });
+  };
+
   const switchLevel = (transitionalLevelId) => {
     const newLevel = levels.find((level) => level.id === transitionalLevelId);
-    setGameStatus({ ...gameStatus, currentLevel: newLevel });
+
+    setGameStatus({
+      currentLevel: { ...newLevel },
+      shownLevelMenu: false,
+      shownModal: false,
+      paused: false,
+    });
     setOnCheck(null);
     setLevelInfo({
       isCompleted: false,
@@ -91,10 +104,10 @@ const App = () => {
 
   useEffect(() => {
     initiateCards(gameStatus.currentLevel.amount);
-  }, [gameStatus]);
+  }, [gameStatus.currentLevel]);
 
   return (
-    <div className="App flex h-screen flex-col font-sans-main text-stone-200">
+    <div className="App flex h-screen flex-col overflow-y-auto overflow-x-hidden font-sans-main text-stone-200">
       {levelInfo.correct === gameStatus.currentLevel.pairs
         ? (levelInfo.isCompleted = true)
         : null}
@@ -115,10 +128,13 @@ const App = () => {
       <Header
         currentLevel={gameStatus.currentLevel}
         levelInfo={levelInfo}
-        switchLevel={switchLevel}
+        restartLevel={() => switchLevel(gameStatus.currentLevel.id)}
+        showLevelMenu={levelMenuHandler}
       />
 
-      <LevelMenu />
+      {gameStatus.shownLevelMenu ? (
+        <LevelMenu switchLevel={switchLevel} />
+      ) : null}
 
       <Board
         cards={cards}

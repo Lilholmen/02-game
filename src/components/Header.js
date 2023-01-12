@@ -9,11 +9,11 @@ import Button from "./UI/Button";
 import HeaderSection from "./UI/HeaderSection";
 import Icon from "./UI/Icon";
 
-const Header = ({ switchLevel, levelInfo, currentLevel }) => {
+const Header = ({ levelInfo, currentLevel, restartLevel, showLevelMenu }) => {
   return (
     <header className="flex justify-between bg-stone-700">
       <HeaderSection>
-        <Button action={() => switchLevel(5)}>
+        <Button action={showLevelMenu}>
           <BsGridFill />
         </Button>
       </HeaderSection>
@@ -43,7 +43,7 @@ const Header = ({ switchLevel, levelInfo, currentLevel }) => {
       </HeaderSection>
 
       <HeaderSection>
-        <Button action={() => switchLevel(currentLevel.id)}>
+        <Button action={restartLevel}>
           <BsArrowClockwise />
         </Button>
       </HeaderSection>
