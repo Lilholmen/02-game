@@ -1,4 +1,5 @@
 import ModalButton from "./UI/ModalButton";
+import Time from "./UI/Time";
 
 const Modal = ({ message = "You WIN!", restart, nextLevel, levelInfo }) => {
   return (
@@ -21,7 +22,9 @@ const Modal = ({ message = "You WIN!", restart, nextLevel, levelInfo }) => {
                     <div className="flex flex-col">
                       <div className="border-b text-xl">Time</div>
                       <div className="flex justify-between text-3xl text-amber-300">
-                        <div>Value</div>
+                        <div>
+                          <Time value={levelInfo.time} />
+                        </div>
                         <div>Best</div>
                       </div>
                     </div>

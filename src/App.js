@@ -2,29 +2,32 @@ import { useEffect, useState } from "react";
 import Board from "./components/Board";
 import Header from "./components/Header";
 import Modal from "./components/Modal";
+import LevelMenu from "./components/LevelMenu";
+import Footer from "./components/Footer";
+import Timer from "./components/Timer";
 
 import levels from "./data/levels";
 import colors from "./data/colors";
-import LevelMenu from "./components/LevelMenu";
-import Footer from "./components/Footer";
 
 const STARTING_LEVEL = 1;
-const LAST_LEVEL = 5;
+const LAST_LEVEL = levels.length;
 
 const App = () => {
   const [gameStatus, setGameStatus] = useState({
     currentLevel: levels.find((level) => level.id === STARTING_LEVEL),
     shownLevelMenu: false,
     shownModal: false,
-    paused: false,
+    isPlaying: false,
   });
   const [levelInfo, setLevelInfo] = useState({
     isCompleted: false,
     correct: 0,
     score: 0,
+    time: 0,
   });
   const [cards, setCards] = useState([]);
   const [onCheck, setOnCheck] = useState(null);
+  const [timePassed, setTimePassed] = useState(0);
 
   const levelMenuHandler = () => {
     setGameStatus({
@@ -40,17 +43,24 @@ const App = () => {
       currentLevel: { ...newLevel },
       shownLevelMenu: false,
       shownModal: false,
-      paused: false,
+      isPlaying: false,
     });
     setOnCheck(null);
     setLevelInfo({
       isCompleted: false,
       correct: 0,
       score: 0,
+      time: 0,
     });
+
+    setTimePassed(0);
   };
 
   const checkHandler = (checkedCard) => {
+    if (!gameStatus.isPlaying) {
+      setGameStatus({ ...gameStatus, isPlaying: true });
+    }
+
     if (!onCheck) {
       setCards(
         cards.map((card) =>
@@ -71,9 +81,16 @@ const App = () => {
         );
         setOnCheck(null);
         setLevelInfo({
-          ...levelInfo,
+          isCompleted:
+            levelInfo.correct + 1 === gameStatus.currentLevel.pairs
+              ? true
+              : false,
           correct: levelInfo.correct + 1,
           score: levelInfo.score + 1,
+          time:
+            levelInfo.correct + 1 === gameStatus.currentLevel.pairs
+              ? timePassed
+              : 0,
         });
       } else {
         setOnCheck(null);
@@ -109,9 +126,6 @@ const App = () => {
 
   return (
     <div className="App flex h-screen flex-col font-sans-main text-stone-200">
-      {levelInfo.correct === gameStatus.currentLevel.pairs
-        ? (levelInfo.isCompleted = true)
-        : null}
       <Modal
         restart={() => switchLevel(gameStatus.currentLevel.id)}
         nextLevel={
@@ -131,7 +145,14 @@ const App = () => {
         levelInfo={levelInfo}
         restartLevel={() => switchLevel(gameStatus.currentLevel.id)}
         showLevelMenu={levelMenuHandler}
-      />
+      >
+        <Timer
+          running={gameStatus.isPlaying}
+          levelInfo={levelInfo}
+          time={timePassed}
+          incrementTime={() => setTimePassed((prev) => prev + 1)}
+        />
+      </Header>
 
       {gameStatus.shownLevelMenu ? (
         <LevelMenu switchLevel={switchLevel} />

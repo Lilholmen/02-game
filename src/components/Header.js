@@ -9,7 +9,13 @@ import Button from "./UI/Button";
 import HeaderSection from "./UI/HeaderSection";
 import Icon from "./UI/Icon";
 
-const Header = ({ levelInfo, currentLevel, restartLevel, showLevelMenu }) => {
+const Header = ({
+  levelInfo,
+  currentLevel,
+  restartLevel,
+  showLevelMenu,
+  children,
+}) => {
   return (
     <header className="flex justify-between bg-stone-700">
       <HeaderSection>
@@ -28,7 +34,7 @@ const Header = ({ levelInfo, currentLevel, restartLevel, showLevelMenu }) => {
       </HeaderSection>
 
       <HeaderSection>
-        <span className="font-bold">00:00</span>
+        <span className="font-bold">{children}</span>
       </HeaderSection>
 
       <HeaderSection>
