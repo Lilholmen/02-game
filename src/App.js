@@ -11,7 +11,7 @@ const LAST_LEVEL = 5;
 
 const App = () => {
   const [cards, setCards] = useState([]);
-  const [checked, setChecked] = useState([]);
+  const [onCheck, setOnCheck] = useState(null);
   const [levelInfo, setLevelInfo] = useState({
     isCompleted: false,
     correct: 0,
@@ -29,38 +29,47 @@ const App = () => {
     });
   };
 
-  const markChecked = (id) => {
-    setCards(
-      cards.map((card) =>
-        card.id === id ? { ...card, isChecked: true } : card
-      )
-    );
-  };
-
-  const markGuessed = (value) => {
-    setCards(
-      cards.map((card) =>
-        card.value === value ? { ...card, isGuessed: true } : card
-      )
-    );
-  };
-
-  const guessHandler = (id) => {
-    markChecked(id);
-
-    setChecked([...checked, cards.find((card) => card.id === id)]);
-  };
-
-  const changeLevel = (transitionalLevel) => {
-    setCurrentLevel(levels.find((level) => level.id === transitionalLevel));
-
+  const switchLevel = (transitionalLevelId) => {
+    const newLevel = levels.find((level) => level.id === transitionalLevelId);
+    setCurrentLevel({ ...newLevel });
+    setOnCheck(null);
     resetLevelInfo();
   };
 
-  const restartLevel = () => {
-    setCurrentLevel({ ...currentLevel });
-
-    resetLevelInfo();
+  const checkHandler = (checkedCard) => {
+    if (!onCheck) {
+      setCards(
+        cards.map((card) =>
+          card.id === checkedCard.id
+            ? { ...card, isChecked: true }
+            : { ...card, isChecked: false }
+        )
+      );
+      setOnCheck(checkedCard);
+    } else {
+      if (onCheck.value === checkedCard.value) {
+        setCards(
+          cards.map((card) =>
+            card.value === checkedCard.value
+              ? { ...card, isGuessed: true }
+              : card
+          )
+        );
+        setOnCheck(null);
+        setLevelInfo({
+          ...levelInfo,
+          correct: levelInfo.correct + 1,
+          score: levelInfo.score + 1,
+        });
+      } else {
+        setOnCheck(null);
+        setLevelInfo({
+          ...levelInfo,
+          score: levelInfo.score + 1,
+        });
+        checkedCard.isChecked = true;
+      }
+    }
   };
 
   useEffect(() => {
@@ -84,44 +93,16 @@ const App = () => {
     initiateCards();
   }, [currentLevel]);
 
-  useEffect(() => {
-    if (checked.length === 2) {
-      if (checked[0].value === checked[1].value) {
-        markGuessed(checked[0].value);
-
-        setChecked([]);
-        setLevelInfo({
-          ...levelInfo,
-          correct: levelInfo.correct + 1,
-          score: levelInfo.score + 1,
-        });
-      } else {
-        setLevelInfo({ ...levelInfo, score: levelInfo.score + 1 });
-      }
-    }
-    if (checked.length === 3) {
-      setCards(
-        cards.map((card) =>
-          card.id === checked[0].id || card.id === checked[1].id
-            ? { ...card, isChecked: false }
-            : card
-        )
-      );
-
-      setChecked([checked[2]]);
-    }
-  }, [checked]);
-
   return (
     <div className="App flex h-screen flex-col font-sans-main text-stone-200">
       {levelInfo.correct === currentLevel.pairs
         ? (levelInfo.isCompleted = true)
         : null}
       <Modal
-        restart={restartLevel}
+        restart={() => switchLevel(currentLevel.id)}
         nextLevel={
           currentLevel.id < LAST_LEVEL
-            ? () => changeLevel(currentLevel.id + 1)
+            ? () => switchLevel(currentLevel.id + 1)
             : false
         }
         levelInfo={{
@@ -132,16 +113,14 @@ const App = () => {
       />
 
       <Header
-        score={levelInfo.score}
-        correct={levelInfo.correct}
-        total={currentLevel.pairs}
-        change={changeLevel}
-        restart={restartLevel}
+        currentLevel={currentLevel}
+        levelInfo={levelInfo}
+        switchLevel={switchLevel}
       />
 
       <Board
         cards={cards}
-        guess={guessHandler}
+        guess={checkHandler}
       />
     </div>
   );

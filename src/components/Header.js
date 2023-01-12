@@ -9,11 +9,11 @@ import Button from "./UI/Button";
 import HeaderSection from "./UI/HeaderSection";
 import Icon from "./UI/Icon";
 
-const Header = ({ change, restart, score, correct, total }) => {
+const Header = ({ switchLevel, levelInfo, currentLevel }) => {
   return (
     <header className="flex justify-between bg-stone-700">
       <HeaderSection>
-        <Button action={() => change(5)}>
+        <Button action={() => switchLevel(5)}>
           <BsGridFill />
         </Button>
       </HeaderSection>
@@ -23,7 +23,7 @@ const Header = ({ change, restart, score, correct, total }) => {
           <Icon>
             <BsQuestionSquare />
           </Icon>
-          <span className="pl-2 lg:pl-4">{score}</span>
+          <span className="pl-2 lg:pl-4">{levelInfo.score}</span>
         </div>
       </HeaderSection>
 
@@ -37,13 +37,13 @@ const Header = ({ change, restart, score, correct, total }) => {
             <BsCheckSquare />
           </Icon>
           <span className="flex-nowrap pl-2 lg:pl-4">
-            {correct} / {total}
+            {levelInfo.correct} / {currentLevel.pairs}
           </span>
         </div>
       </HeaderSection>
 
       <HeaderSection>
-        <Button action={restart}>
+        <Button action={() => switchLevel(currentLevel.id)}>
           <BsArrowClockwise />
         </Button>
       </HeaderSection>

@@ -7,7 +7,7 @@ const Card = ({ card, guess }) => {
       style={
         card.isChecked || card.isGuessed ? { backgroundColor: card.color } : {}
       }
-      onClick={card.isChecked ? () => {} : () => guess(card.id)}
+      onClick={card.isChecked ? () => {} : () => guess(card)}
     >
       {card.isGuessed ? <FaCheck /> : card.value}
     </div>
