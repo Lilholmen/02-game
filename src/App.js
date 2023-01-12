@@ -5,35 +5,35 @@ import Modal from "./components/Modal";
 
 import levels from "./data/levels";
 import colors from "./data/colors";
+import LevelMenu from "./components/LevelMenu";
 
 const STARTING_LEVEL = 1;
 const LAST_LEVEL = 5;
 
 const App = () => {
-  const [cards, setCards] = useState([]);
-  const [onCheck, setOnCheck] = useState(null);
+  const [gameStatus, setGameStatus] = useState({
+    currentLevel: levels.find((level) => level.id === STARTING_LEVEL),
+    shownLevelMenu: false,
+    shownModal: false,
+    paused: false,
+  });
   const [levelInfo, setLevelInfo] = useState({
     isCompleted: false,
     correct: 0,
     score: 0,
   });
-  const [currentLevel, setCurrentLevel] = useState(
-    levels.find((level) => level.id === STARTING_LEVEL)
-  );
+  const [cards, setCards] = useState([]);
+  const [onCheck, setOnCheck] = useState(null);
 
-  const resetLevelInfo = () => {
+  const switchLevel = (transitionalLevelId) => {
+    const newLevel = levels.find((level) => level.id === transitionalLevelId);
+    setGameStatus({ ...gameStatus, currentLevel: newLevel });
+    setOnCheck(null);
     setLevelInfo({
       isCompleted: false,
       correct: 0,
       score: 0,
     });
-  };
-
-  const switchLevel = (transitionalLevelId) => {
-    const newLevel = levels.find((level) => level.id === transitionalLevelId);
-    setCurrentLevel({ ...newLevel });
-    setOnCheck(null);
-    resetLevelInfo();
   };
 
   const checkHandler = (checkedCard) => {
@@ -72,51 +72,53 @@ const App = () => {
     }
   };
 
+  const initiateCards = (cardsAmount) => {
+    const cardsArray = [];
+
+    for (let i = 0; i < cardsAmount; i++) {
+      cardsArray.push({
+        id: i + 1,
+        value: Math.floor(i / 2),
+        color: colors[Math.floor(i / 2)],
+        isChecked: false,
+        isGuessed: false,
+      });
+    }
+
+    cardsArray.sort(() => Math.floor(Math.random() - 0.5));
+    setCards(cardsArray);
+  };
+
   useEffect(() => {
-    const initiateCards = () => {
-      const cardsArray = [];
-
-      for (let i = 0; i < currentLevel.amount; i++) {
-        cardsArray.push({
-          id: i + 1,
-          value: Math.floor(i / 2),
-          color: colors[Math.floor(i / 2)],
-          isChecked: false,
-          isGuessed: false,
-        });
-      }
-
-      cardsArray.sort(() => Math.floor(Math.random() - 0.5));
-      setCards(cardsArray);
-    };
-
-    initiateCards();
-  }, [currentLevel]);
+    initiateCards(gameStatus.currentLevel.amount);
+  }, [gameStatus]);
 
   return (
     <div className="App flex h-screen flex-col font-sans-main text-stone-200">
-      {levelInfo.correct === currentLevel.pairs
+      {levelInfo.correct === gameStatus.currentLevel.pairs
         ? (levelInfo.isCompleted = true)
         : null}
       <Modal
-        restart={() => switchLevel(currentLevel.id)}
+        restart={() => switchLevel(gameStatus.currentLevel.id)}
         nextLevel={
-          currentLevel.id < LAST_LEVEL
-            ? () => switchLevel(currentLevel.id + 1)
+          gameStatus.currentLevel.id < LAST_LEVEL
+            ? () => switchLevel(gameStatus.currentLevel.id + 1)
             : false
         }
         levelInfo={{
           ...levelInfo,
-          currentId: currentLevel.id,
-          currentAmount: currentLevel.amount,
+          currentId: gameStatus.currentLevel.id,
+          currentAmount: gameStatus.currentLevel.amount,
         }}
       />
 
       <Header
-        currentLevel={currentLevel}
+        currentLevel={gameStatus.currentLevel}
         levelInfo={levelInfo}
         switchLevel={switchLevel}
       />
+
+      <LevelMenu />
 
       <Board
         cards={cards}
