@@ -1,68 +1,46 @@
 import { useEffect, useState } from "react";
 
-import Board from "./components/Board";
 import Header from "./components/Header";
-import Modal from "./components/Modal";
-import LevelMenu from "./components/LevelMenu";
+import Board from "./components/Board";
 import Footer from "./components/Footer";
-import Timer from "./components/Timer";
+import Modal from "./components/Modal";
 
-import getLevelsFromLocalStorage from "./components/utilities/getLevelsFromLocalStorage";
 import initiateCards from "./components/utilities/initiateCards";
-import writeRecord from "./components/utilities/writeRecord";
+import useLocalStorage from "./components/utilities/useLocalStorage";
+import useTime from "./components/utilities/useTime";
 
-const levels = getLevelsFromLocalStorage();
+import rawLevels from "./data/rawLevels";
 
-const STARTING_LEVEL = 1;
-const LAST_LEVEL = levels.length;
+const INITIAL_SCORE = {
+  attempts: 0,
+  guessed: 0,
+};
 
 const App = () => {
-  const [gameStatus, setGameStatus] = useState({
-    currentLevel: levels.find((level) => level.id === STARTING_LEVEL),
-    shownLevelMenu: false,
-    shownModal: false,
-    isPlaying: false,
-  });
-  const [levelInfo, setLevelInfo] = useState({
-    isCompleted: false,
-    correct: 0,
-    score: 0,
-    time: 0,
-  });
+  const [levels, setLevels] = useLocalStorage("levels", rawLevels);
+  const [currentLevel, setCurrentLevel] = useState(
+    levels.find((level) => level.isCurrent)
+  );
+  const [levelScore, setLevelScore] = useState(INITIAL_SCORE);
+  const [levelTime, isRunning, setIsRunning] = useTime(0);
   const [cards, setCards] = useState([]);
   const [onCheck, setOnCheck] = useState(null);
-  const [timePassed, setTimePassed] = useState(0);
 
-  const levelMenuHandler = () => {
-    setGameStatus({
-      ...gameStatus,
-      shownLevelMenu: !gameStatus.shownLevelMenu,
-    });
-  };
+  const [isCompleted, setIsComplited] = useState(false);
 
   const switchLevel = (transitionalLevelId) => {
-    const newLevel = levels.find((level) => level.id === transitionalLevelId);
-
-    setGameStatus({
-      currentLevel: { ...newLevel },
-      shownLevelMenu: false,
-      shownModal: false,
-      isPlaying: false,
+    setCurrentLevel({
+      ...levels.find((level) => level.id === transitionalLevelId),
     });
+    setLevelScore(INITIAL_SCORE);
+    setIsComplited(false);
+    setIsRunning(false);
     setOnCheck(null);
-    setLevelInfo({
-      isCompleted: false,
-      correct: 0,
-      score: 0,
-      time: 0,
-    });
-
-    setTimePassed(0);
   };
 
   const checkHandler = (checkedCard) => {
-    if (!gameStatus.isPlaying) {
-      setGameStatus({ ...gameStatus, isPlaying: true });
+    if (!isRunning) {
+      setIsRunning(true);
     }
 
     if (!onCheck) {
@@ -83,35 +61,33 @@ const App = () => {
               : card
           )
         );
-        setOnCheck(null);
-        setLevelInfo({
-          isCompleted:
-            levelInfo.correct + 1 === gameStatus.currentLevel.pairs
-              ? true
-              : false,
-          correct: levelInfo.correct + 1,
-          score: levelInfo.score + 1,
-          time:
-            levelInfo.correct + 1 === gameStatus.currentLevel.pairs
-              ? timePassed
-              : 0,
+        setLevelScore({
+          attempts: levelScore.attempts + 1,
+          guessed: levelScore.guessed + 1,
         });
       } else {
-        setOnCheck(null);
-        setLevelInfo({
-          ...levelInfo,
-          score: levelInfo.score + 1,
+        setLevelScore({
+          ...levelScore,
+          attempts: levelScore.attempts + 1,
         });
         checkedCard.isChecked = true;
       }
+      setOnCheck(null);
     }
   };
 
   useEffect(() => {
-    initiateCards(gameStatus.currentLevel.amount, setCards);
-  }, [gameStatus.currentLevel]);
+    initiateCards(currentLevel.amount, setCards);
+  }, [currentLevel]);
 
-  const writeLocal = (id) => {
+  useEffect(() => {
+    if (levelScore.guessed === currentLevel.pairs) {
+      setIsComplited(true);
+      setIsRunning(false);
+    }
+  }, [levelScore.guessed, currentLevel.pairs, setIsRunning]);
+
+  /* const writeLocal = (id) => {
     const currentLevel = levels.find((level) => level.id === id);
 
     if (currentLevel.bestTime === null && currentLevel.bestTry === null) {
@@ -125,47 +101,27 @@ const App = () => {
     }
 
     window.localStorage.setItem("levels", JSON.stringify(levels));
-  };
+  }; */
 
   return (
     <div className="App flex h-screen flex-col font-sans-main text-stone-200">
-      <Modal
-        restart={() => switchLevel(gameStatus.currentLevel.id)}
-        nextLevel={
-          gameStatus.currentLevel.id < LAST_LEVEL
-            ? () => switchLevel(gameStatus.currentLevel.id + 1)
-            : false
-        }
-        levelInfo={{
-          ...levelInfo,
-          currentId: gameStatus.currentLevel.id,
-          currentAmount: gameStatus.currentLevel.amount,
-          bestTime: gameStatus.currentLevel.bestTime,
-          bestTry: gameStatus.currentLevel.bestTry,
-        }}
-        save={writeLocal}
-      />
-
-      <Header
-        currentLevel={gameStatus.currentLevel}
-        levelInfo={levelInfo}
-        restartLevel={() => switchLevel(gameStatus.currentLevel.id)}
-        showLevelMenu={levelMenuHandler}
-      >
-        <Timer
-          running={gameStatus.isPlaying}
-          levelInfo={levelInfo}
-          time={timePassed}
-          incrementTime={() => setTimePassed((prev) => prev + 1)}
-        />
-      </Header>
-
-      {gameStatus.shownLevelMenu ? (
-        <LevelMenu
+      {isCompleted ? (
+        <Modal
           switchLevel={switchLevel}
-          levels={levels}
+          lastLevelId={levels.length}
+          levelScore={levelScore}
+          currentLevelInfo={currentLevel}
+          timePassed={levelTime}
         />
       ) : null}
+
+      <Header
+        currentLevel={currentLevel}
+        levelScore={levelScore}
+        switchLevel={switchLevel}
+        levels={levels}
+        time={levelTime}
+      />
 
       <Board
         cards={cards}

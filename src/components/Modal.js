@@ -1,18 +1,22 @@
+import { useState } from "react";
 import ModalButton from "./UI/ModalButton";
 import Time from "./UI/Time";
 
 const Modal = ({
-  message = "You WIN!",
-  restart,
-  nextLevel,
-  levelInfo,
-  save,
+  switchLevel,
+  levelScore,
+  lastLevelId,
+  currentLevelInfo,
+  timePassed,
 }) => {
+  const [showModal, setShowModal] = useState(true);
+
+  const message = "You WIN!";
+
   return (
     <>
-      {levelInfo.isCompleted ? (
+      {showModal ? (
         <>
-          {save(levelInfo.currentId)}
           <div className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto overflow-x-hidden font-sans-modal outline-none focus:outline-none">
             <div className="relative mx-auto my-6 w-auto">
               <div className="relative flex w-full flex-col rounded-xl bg-slate-800 text-slate-200">
@@ -22,18 +26,18 @@ const Modal = ({
 
                 <div className="flex-auto p-6">
                   <p className="my-4 text-lg">
-                    You've been completed Level {levelInfo.currentId} with{" "}
-                    {levelInfo.currentAmount} cards
+                    You've been completed Level {currentLevelInfo.id} with{" "}
+                    {currentLevelInfo.amount} cards
                   </p>
                   <div className="flex w-full flex-col gap-4 pt-6">
                     <div className="flex flex-col">
                       <div className="border-b text-xl">Time</div>
                       <div className="flex justify-between text-3xl text-amber-300">
                         <div>
-                          <Time value={levelInfo.time} />
+                          <Time value={timePassed} />
                         </div>
                         <div>
-                          <Time value={levelInfo.bestTime} />
+                          <Time value={currentLevelInfo.bestTime} />
                         </div>
                       </div>
                     </div>
@@ -41,8 +45,8 @@ const Modal = ({
                     <div>
                       <div className="border-b text-xl">Attempts</div>
                       <div className="flex justify-between text-3xl text-amber-300">
-                        <div>{levelInfo.score}</div>
-                        <div>{levelInfo.bestTry}</div>
+                        <div>{levelScore.attempts}</div>
+                        <div>{currentLevelInfo.bestTry}</div>
                       </div>
                     </div>
                   </div>
@@ -50,27 +54,31 @@ const Modal = ({
 
                 <div className="flex items-center justify-end border-t border-amber-500 p-6">
                   <ModalButton
-                    text="save"
                     isDisabled={false}
-                    action={() => save(levelInfo.currentId)}
-                  />
+                    action={() => console.log("save")}
+                  >
+                    Save
+                  </ModalButton>
                   <ModalButton
-                    text="Cancel"
                     isDisabled={false}
-                    action={() => {}}
-                  />
+                    action={() => setShowModal(false)}
+                  >
+                    Cancel
+                  </ModalButton>
                   <ModalButton
-                    text="Restart"
                     isDisabled={false}
                     action={() => {
-                      restart();
+                      switchLevel(currentLevelInfo.id);
                     }}
-                  />
+                  >
+                    Restart
+                  </ModalButton>
                   <ModalButton
-                    text="Next Level"
-                    isDisabled={!nextLevel}
-                    action={nextLevel || (() => {})}
-                  />
+                    isDisabled={lastLevelId === currentLevelInfo.id}
+                    action={() => switchLevel(currentLevelInfo.id + 1)}
+                  >
+                    Next Level
+                  </ModalButton>
                 </div>
               </div>
             </div>

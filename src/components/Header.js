@@ -1,25 +1,24 @@
+import { useState } from "react";
 import {
   BsQuestionSquare,
   BsCheckSquare,
   BsArrowClockwise,
   BsGridFill,
 } from "react-icons/bs";
+import LevelMenu from "./LevelMenu";
 
 import Button from "./UI/Button";
 import HeaderSection from "./UI/HeaderSection";
 import Icon from "./UI/Icon";
+import Time from "./UI/Time";
 
-const Header = ({
-  levelInfo,
-  currentLevel,
-  restartLevel,
-  showLevelMenu,
-  children,
-}) => {
+const Header = ({ levelScore, currentLevel, switchLevel, levels, time }) => {
+  const [showLevelMenu, setShowLevelMenu] = useState(false);
+
   return (
     <header className="flex justify-between bg-stone-700">
       <HeaderSection>
-        <Button action={showLevelMenu}>
+        <Button action={() => setShowLevelMenu((prev) => !prev)}>
           <BsGridFill />
         </Button>
       </HeaderSection>
@@ -29,12 +28,14 @@ const Header = ({
           <Icon>
             <BsQuestionSquare />
           </Icon>
-          <span className="pl-2 lg:pl-4">{levelInfo.score}</span>
+          <span className="pl-2 lg:pl-4">{levelScore.attempts}</span>
         </div>
       </HeaderSection>
 
       <HeaderSection>
-        <span className="font-bold">{children}</span>
+        <span className="font-bold">
+          <Time value={time} />
+        </span>
       </HeaderSection>
 
       <HeaderSection>
@@ -43,16 +44,23 @@ const Header = ({
             <BsCheckSquare />
           </Icon>
           <span className="flex-nowrap pl-2 lg:pl-4">
-            {levelInfo.correct} / {currentLevel.pairs}
+            {levelScore.guessed} / {currentLevel.pairs}
           </span>
         </div>
       </HeaderSection>
 
       <HeaderSection>
-        <Button action={restartLevel}>
+        <Button action={() => switchLevel(currentLevel.id)}>
           <BsArrowClockwise />
         </Button>
       </HeaderSection>
+
+      {showLevelMenu ? (
+        <LevelMenu
+          switchLevel={switchLevel}
+          levels={levels}
+        />
+      ) : null}
     </header>
   );
 };

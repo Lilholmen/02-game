@@ -1,4 +1,4 @@
-const levels = [
+const rawLevels = [
   {
     id: 1,
     rows: 2,
@@ -46,4 +46,4 @@ const levels = [
   },
 ];
 
-export default levels;
+export default rawLevels;
