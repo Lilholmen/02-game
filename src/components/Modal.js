@@ -8,6 +8,7 @@ const Modal = ({
   lastLevelId,
   currentLevelInfo,
   timePassed,
+  updateBest,
 }) => {
   const [showModal, setShowModal] = useState(true);
 

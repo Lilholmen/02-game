@@ -5,9 +5,9 @@ import Board from "./components/Board";
 import Footer from "./components/Footer";
 import Modal from "./components/Modal";
 
-import initiateCards from "./components/utilities/initiateCards";
-import useLocalStorage from "./components/utilities/useLocalStorage";
-import useTime from "./components/utilities/useTime";
+import useLocalStorage from "./components/hooks/useLocalStorage";
+import useTime from "./components/hooks/useTime";
+import useCards from "./components/hooks/useCards";
 
 import rawLevels from "./data/rawLevels";
 
@@ -23,7 +23,7 @@ const App = () => {
   );
   const [levelScore, setLevelScore] = useState(INITIAL_SCORE);
   const [levelTime, isRunning, setIsRunning] = useTime(0);
-  const [cards, setCards] = useState([]);
+  const [cards, setCards, updateCards] = useCards(0);
   const [onCheck, setOnCheck] = useState(null);
 
   const [isCompleted, setIsComplited] = useState(false);
@@ -44,7 +44,7 @@ const App = () => {
     }
 
     if (!onCheck) {
-      setCards(
+      updateCards(
         cards.map((card) =>
           card.id === checkedCard.id
             ? { ...card, isChecked: true }
@@ -54,7 +54,7 @@ const App = () => {
       setOnCheck(checkedCard);
     } else {
       if (onCheck.value === checkedCard.value) {
-        setCards(
+        updateCards(
           cards.map((card) =>
             card.value === checkedCard.value
               ? { ...card, isGuessed: true }
@@ -77,7 +77,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    initiateCards(currentLevel.amount, setCards);
+    setCards(currentLevel.amount);
   }, [currentLevel]);
 
   useEffect(() => {
@@ -87,21 +87,26 @@ const App = () => {
     }
   }, [levelScore.guessed, currentLevel.pairs, setIsRunning]);
 
-  /* const writeLocal = (id) => {
-    const currentLevel = levels.find((level) => level.id === id);
+  const updateBest = () => {
+    let newBestAttempts = false;
+    let newBestTime = false;
 
-    if (currentLevel.bestTime === null && currentLevel.bestTry === null) {
-      currentLevel.bestTime = levelInfo.time;
-      currentLevel.bestTry = levelInfo.score;
-    } else {
-      if (levelInfo.time < currentLevel.bestTime)
-        currentLevel.bestTime = levelInfo.time;
-      if (levelInfo.score < currentLevel.bestTry)
-        currentLevel.bestTry = levelInfo.score;
+    if (
+      currentLevel.bestTry === null ||
+      currentLevel.bestTry < levelScore.attempts
+    ) {
+      currentLevel.bestTry = levelScore.attempts;
+      newBestAttempts = true;
+    }
+    if (currentLevel.bestTime === null || currentLevel.bestTime < levelTime) {
+      currentLevel.bestTry = levelTime;
+      newBestTime = true;
     }
 
-    window.localStorage.setItem("levels", JSON.stringify(levels));
-  }; */
+    setLevels(levels);
+
+    return { newBestAttempts, newBestTime };
+  };
 
   return (
     <div className="App flex h-screen flex-col font-sans-main text-stone-200">
@@ -112,6 +117,7 @@ const App = () => {
           levelScore={levelScore}
           currentLevelInfo={currentLevel}
           timePassed={levelTime}
+          updateBest={updateBest}
         />
       ) : null}
 
