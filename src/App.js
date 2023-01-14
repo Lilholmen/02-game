@@ -109,7 +109,7 @@ const App = () => {
   };
 
   return (
-    <div className="App flex h-screen flex-col font-sans-main text-stone-200">
+    <div className="App flex h-screen select-none flex-col font-sans-main text-stone-200">
       {isCompleted ? (
         <Modal
           switchLevel={switchLevel}
