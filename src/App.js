@@ -29,6 +29,7 @@ const App = () => {
   const [isCompleted, setIsComplited] = useState(false);
 
   const switchLevel = (transitionalLevelId) => {
+    setCards([]);
     setCurrentLevel({
       ...levels.find((level) => level.id === transitionalLevelId),
     });

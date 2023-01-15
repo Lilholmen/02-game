@@ -13,6 +13,9 @@ module.exports = {
       borderRadius: {
         large: "64px",
       },
+      transformOrigin: {
+        "center-right": "center right",
+      },
     },
   },
   plugins: [],
