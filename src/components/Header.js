@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BsQuestionSquare,
   BsCheckSquare,
@@ -14,6 +14,10 @@ import Time from "./UI/Time";
 
 const Header = ({ levelScore, currentLevel, switchLevel, levels, time }) => {
   const [showLevelMenu, setShowLevelMenu] = useState(false);
+
+  useEffect(() => {
+    setShowLevelMenu(false);
+  }, [currentLevel]);
 
   return (
     <header className="flex justify-between bg-stone-700">
