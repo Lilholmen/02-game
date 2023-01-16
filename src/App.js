@@ -19,7 +19,7 @@ const INITIAL_SCORE = {
 const App = () => {
   const [levels, setLevels] = useLocalStorage("levels", rawLevels);
   const [currentLevel, setCurrentLevel] = useState(
-    levels.find((level) => level.isCurrent)
+    levels.find((level) => level.id === 1)
   );
   const [levelScore, setLevelScore] = useState(INITIAL_SCORE);
   const [levelTime, isRunning, setIsRunning] = useTime(0);
