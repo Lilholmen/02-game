@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import imagesSrc from "../data/images";
 import CardFace from "./CardFace";
 
-const Card = ({ card, guess }) => {
+const Card = ({ card, guess, disable }) => {
   const [flipped, setFlipped] = useState(card.isChecked);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const Card = ({ card, guess }) => {
   }, [card.isChecked, card.isGuessed]);
 
   return (
-    <div
+    <button
       className="cursor-pointer [perspective:1000px]"
       onClick={
         card.isChecked || card.isGuessed
@@ -24,6 +24,7 @@ const Card = ({ card, guess }) => {
               guess(card);
             }
       }
+      disabled={disable}
     >
       <div
         className="relative h-full w-full origin-center-right border-8 border-stone-600 text-7xl text-stone-200 duration-500 [transform-style:preserve-3d] "
@@ -44,7 +45,7 @@ const Card = ({ card, guess }) => {
           />
         </CardFace>
       </div>
-    </div>
+    </button>
   );
 };
 

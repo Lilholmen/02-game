@@ -9,130 +9,99 @@ import useLocalStorage from "./components/hooks/useLocalStorage";
 import useTime from "./components/hooks/useTime";
 import useCards from "./components/hooks/useCards";
 
-import rawLevels from "./data/rawLevels";
-
-const INITIAL_SCORE = {
-  attempts: 0,
-  guessed: 0,
-};
+import levels from "./data/levels";
 
 const App = () => {
-  const [levels, setLevels] = useLocalStorage("levels", rawLevels);
-  const [currentLevel, setCurrentLevel] = useState(
-    levels.find((level) => level.id === 1)
+  const [currentLevelId, setCurrentLevelId] = useLocalStorage(
+    "currentLevelId",
+    0
   );
-  const [levelScore, setLevelScore] = useState(INITIAL_SCORE);
-  const [levelTime, isRunning, setIsRunning] = useTime(0);
-  const [cards, setCards, updateCards] = useCards(0);
-  const [onCheck, setOnCheck] = useState(null);
+  const [cards, setCards, updateCards] = useCards(
+    levels[currentLevelId].amount
+  );
+  const [levelAttempts, setLevelAttempts] = useState(0);
+  const [levelGuessed, setLevelGuessed] = useState(0);
+  const [levelTime, startTimer, pauseTimer, stopTimer] = useTime(0);
+  const [leaderBoard, setLeaderBoard] = useLocalStorage(
+    "leaderBoard",
+    Array.from({ length: levels.length }, () => ({
+      time: null,
+      attempts: null,
+    }))
+  );
 
-  const [isCompleted, setIsComplited] = useState(false);
+  const currentLevel = levels[currentLevelId];
+  const completed = currentLevel.pairs === levelGuessed;
 
-  const switchLevel = (transitionalLevelId) => {
-    setCards([]);
-    setCurrentLevel({
-      ...levels.find((level) => level.id === transitionalLevelId),
-    });
-    setLevelScore(INITIAL_SCORE);
-    setIsComplited(false);
-    setIsRunning(false);
-    setOnCheck(null);
+  const switchLevel = (transitionalLevelId = null) => {
+    if (transitionalLevelId !== null) {
+      setCurrentLevelId(transitionalLevelId);
+    }
+    setCards(0);
+    setLevelAttempts(0);
+    setLevelGuessed(0);
+    stopTimer();
   };
 
-  const checkHandler = (checkedCard) => {
-    if (!isRunning) {
-      setIsRunning(true);
-    }
+  /* const updateLeaderBoard = () => {
+    const isNewBestTime =
+      leaderBoard[currentLevelId].time === null ||
+      levelTime < leaderBoard[currentLevelId].time;
+    const isNewBestAttempt =
+      leaderBoard[currentLevelId].attempts === null ||
+      levelAttempts < leaderBoard[currentLevelId].attempts;
 
-    if (!onCheck) {
-      updateCards(
-        cards.map((card) =>
-          card.id === checkedCard.id
-            ? { ...card, isChecked: true }
-            : { ...card, isChecked: false }
-        )
-      );
-      setOnCheck(checkedCard);
-    } else {
-      if (onCheck.value === checkedCard.value) {
-        updateCards(
-          cards.map((card) =>
-            card.value === checkedCard.value
-              ? { ...card, isGuessed: true }
-              : card
-          )
-        );
-        setLevelScore({
-          attempts: levelScore.attempts + 1,
-          guessed: levelScore.guessed + 1,
-        });
-      } else {
-        setLevelScore({
-          ...levelScore,
-          attempts: levelScore.attempts + 1,
-        });
-        checkedCard.isChecked = true;
-      }
-      setOnCheck(null);
-    }
-  };
+    setLeaderBoard(
+      leaderBoard.map((level) =>
+        level.id === currentLevelId
+          ? {
+              time: isNewBestTime ? levelTime : level.time,
+              attempts: isNewBestAttempt ? levelAttempts : level.attempts,
+            }
+          : level
+      )
+    );
+
+    return [isNewBestTime, isNewBestAttempt];
+  }; */
 
   useEffect(() => {
-    setCards(currentLevel.amount);
-  }, [currentLevel]);
-
-  useEffect(() => {
-    if (levelScore.guessed === currentLevel.pairs) {
-      setIsComplited(true);
-      setIsRunning(false);
+    if (cards.length === 0) {
+      setCards(currentLevel.amount);
     }
-  }, [levelScore.guessed, currentLevel.pairs, setIsRunning]);
-
-  const updateBest = () => {
-    let newBestAttempts = false;
-    let newBestTime = false;
-
-    if (
-      currentLevel.bestTry === null ||
-      currentLevel.bestTry < levelScore.attempts
-    ) {
-      currentLevel.bestTry = levelScore.attempts;
-      newBestAttempts = true;
-    }
-    if (currentLevel.bestTime === null || currentLevel.bestTime < levelTime) {
-      currentLevel.bestTry = levelTime;
-      newBestTime = true;
-    }
-
-    setLevels(levels);
-
-    return { newBestAttempts, newBestTime };
-  };
+  }, [cards.length, currentLevel.amount, setCards]);
 
   return (
-    <div className="App flex h-screen select-none flex-col font-sans-main text-stone-200">
-      {isCompleted ? (
-        <Modal
-          switchLevel={switchLevel}
-          lastLevelId={levels.length}
-          levelScore={levelScore}
-          currentLevelInfo={currentLevel}
-          timePassed={levelTime}
-          updateBest={updateBest}
-        />
+    <div className="flex h-screen select-none flex-col font-sans-main text-stone-200">
+      {completed ? (
+        <>
+          {pauseTimer()}
+          <Modal
+            switchLevel={switchLevel}
+            isLastLevel={levels.length === currentLevel.id + 1}
+            time={levelTime}
+            attempts={levelAttempts}
+            currentLevel={currentLevel}
+            best={leaderBoard[currentLevelId]}
+          />
+        </>
       ) : null}
 
       <Header
         currentLevel={currentLevel}
-        levelScore={levelScore}
+        attempts={levelAttempts}
+        guessed={levelGuessed}
         switchLevel={switchLevel}
         levels={levels}
         time={levelTime}
       />
 
       <Board
+        setAttempts={setLevelAttempts}
+        setGuessed={setLevelGuessed}
+        updateCards={updateCards}
         cards={cards}
-        guess={checkHandler}
+        startTimer={startTimer}
       />
 
       <Footer />

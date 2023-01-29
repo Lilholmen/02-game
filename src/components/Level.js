@@ -1,10 +1,11 @@
 import { MdOutlineTimer } from "react-icons/md";
 import Time from "./UI/Time";
 
-const Level = ({ levelInfo, action }) => {
+const Level = ({ levelInfo, action, isCurrent }) => {
   return (
     <button
-      className="flex w-full items-center justify-between p-2 sm:px-6 lg:gap-16 lg:px-10 lg:py-4"
+      className="flex w-full items-center justify-between p-2 hover:bg-stone-400 disabled:bg-green-700 sm:px-6 lg:gap-16 lg:px-10 lg:py-4"
+      disabled={isCurrent}
       onClick={() => action(levelInfo.id)}
     >
       <div className="flex w-3/4 items-center gap-4">

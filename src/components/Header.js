@@ -12,7 +12,14 @@ import HeaderSection from "./UI/HeaderSection";
 import Icon from "./UI/Icon";
 import Time from "./UI/Time";
 
-const Header = ({ levelScore, currentLevel, switchLevel, levels, time }) => {
+const Header = ({
+  attempts,
+  guessed,
+  currentLevel,
+  switchLevel,
+  levels,
+  time,
+}) => {
   const [showLevelMenu, setShowLevelMenu] = useState(false);
 
   useEffect(() => {
@@ -32,7 +39,7 @@ const Header = ({ levelScore, currentLevel, switchLevel, levels, time }) => {
           <Icon>
             <BsQuestionSquare />
           </Icon>
-          <span className="pl-2 lg:pl-4">{levelScore.attempts}</span>
+          <span className="pl-2 lg:pl-4">{attempts}</span>
         </div>
       </HeaderSection>
 
@@ -48,13 +55,13 @@ const Header = ({ levelScore, currentLevel, switchLevel, levels, time }) => {
             <BsCheckSquare />
           </Icon>
           <span className="flex-nowrap pl-2 lg:pl-4">
-            {levelScore.guessed} / {currentLevel.pairs}
+            {guessed} / {currentLevel.pairs}
           </span>
         </div>
       </HeaderSection>
 
       <HeaderSection>
-        <Button action={() => switchLevel(currentLevel.id)}>
+        <Button action={() => switchLevel()}>
           <BsArrowClockwise />
         </Button>
       </HeaderSection>
@@ -63,6 +70,7 @@ const Header = ({ levelScore, currentLevel, switchLevel, levels, time }) => {
         <LevelMenu
           switchLevel={switchLevel}
           levels={levels}
+          currentLevel={currentLevel}
         />
       ) : null}
     </header>
