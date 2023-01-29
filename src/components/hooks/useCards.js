@@ -2,30 +2,36 @@ import { useState } from "react";
 
 import colors from "../../data/colors";
 
-const useCards = () => {
-  const [cards, setCards] = useState([]);
+const createCards = (cardsAmount) => {
+  const cardsArray = [];
 
-  const initiateCards = (cardsAmount) => {
-    const cardsArray = [];
+  for (let i = 0; i < cardsAmount; i++) {
+    cardsArray.push({
+      id: i + 1,
+      value: Math.floor(i / 2),
+      color: colors[Math.floor(i / 2)],
+      isChecked: false,
+      isGuessed: false,
+    });
+  }
 
-    for (let i = 0; i < cardsAmount; i++) {
-      cardsArray.push({
-        id: i + 1,
-        value: Math.floor(i / 2),
-        color: colors[Math.floor(i / 2)],
-        isChecked: false,
-        isGuessed: false,
-      });
-    }
+  return cardsArray;
+};
 
-    setCards(cardsArray.sort(() => Math.floor(Math.random() - 0.5)));
+const useCards = (initialAmount) => {
+  const [cards, setCards] = useState(createCards(initialAmount));
+
+  const resetCards = (amount) => {
+    const sortedCards = createCards(amount);
+
+    setCards(sortedCards.sort(() => Math.floor(Math.random() - 0.5)));
   };
 
   const updateCards = (newState) => {
     setCards(newState);
   };
 
-  return [cards, initiateCards, updateCards];
+  return [cards, resetCards, updateCards];
 };
 
 export default useCards;

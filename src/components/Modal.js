@@ -4,11 +4,11 @@ import Time from "./UI/Time";
 
 const Modal = ({
   switchLevel,
-  levelScore,
-  lastLevelId,
-  currentLevelInfo,
-  timePassed,
-  updateBest,
+  attempts,
+  currentLevel,
+  best,
+  time,
+  isLastLevel,
 }) => {
   const [showModal, setShowModal] = useState(true);
 
@@ -27,18 +27,18 @@ const Modal = ({
 
                 <div className="flex-auto p-6">
                   <p className="my-4 text-lg">
-                    You've been completed Level {currentLevelInfo.id} with{" "}
-                    {currentLevelInfo.amount} cards
+                    You've been completed Level {currentLevel.id} with{" "}
+                    {currentLevel.amount} cards
                   </p>
                   <div className="flex w-full flex-col gap-4 pt-6">
                     <div className="flex flex-col">
                       <div className="border-b text-xl">Time</div>
                       <div className="flex justify-between text-3xl text-amber-300">
                         <div>
-                          <Time value={timePassed} />
+                          <Time value={time} />
                         </div>
                         <div>
-                          <Time value={currentLevelInfo.bestTime} />
+                          <Time value={best.time || time} />
                         </div>
                       </div>
                     </div>
@@ -46,20 +46,14 @@ const Modal = ({
                     <div>
                       <div className="border-b text-xl">Attempts</div>
                       <div className="flex justify-between text-3xl text-amber-300">
-                        <div>{levelScore.attempts}</div>
-                        <div>{currentLevelInfo.bestTry}</div>
+                        <div>{attempts}</div>
+                        <div>{best.attempts || attempts}</div>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-end border-t border-amber-500 p-6">
-                  <ModalButton
-                    isDisabled={false}
-                    action={() => console.log("save")}
-                  >
-                    Save
-                  </ModalButton>
                   <ModalButton
                     isDisabled={false}
                     action={() => setShowModal(false)}
@@ -69,14 +63,14 @@ const Modal = ({
                   <ModalButton
                     isDisabled={false}
                     action={() => {
-                      switchLevel(currentLevelInfo.id);
+                      switchLevel(currentLevel.id);
                     }}
                   >
                     Restart
                   </ModalButton>
                   <ModalButton
-                    isDisabled={lastLevelId === currentLevelInfo.id}
-                    action={() => switchLevel(currentLevelInfo.id + 1)}
+                    isDisabled={isLastLevel}
+                    action={() => switchLevel(currentLevel.id + 1)}
                   >
                     Next Level
                   </ModalButton>

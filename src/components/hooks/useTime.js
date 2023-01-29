@@ -1,8 +1,25 @@
 import { useEffect, useState } from "react";
 
-const useTime = (initial = 0) => {
-  const [time, setTime] = useState(initial);
+const useTime = () => {
+  const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+
+  const startTimer = () => {
+    if (!isRunning) {
+      setIsRunning(true);
+    }
+  };
+
+  const pauseTimer = () => {
+    if (isRunning) {
+      setIsRunning(false);
+    }
+  };
+
+  const stopTimer = () => {
+    setIsRunning(false);
+    setTime(0);
+  };
 
   useEffect(() => {
     let interval;
@@ -11,12 +28,12 @@ const useTime = (initial = 0) => {
       interval = setInterval(() => {
         setTime((prev) => prev + 1);
       }, 1000);
-    } else setTime(0);
+    }
 
     return () => clearInterval(interval);
   }, [time, isRunning]);
 
-  return [time, isRunning, setIsRunning];
+  return [time, startTimer, pauseTimer, stopTimer];
 };
 
 export default useTime;
