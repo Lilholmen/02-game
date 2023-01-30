@@ -10,7 +10,7 @@ const Level = ({ levelInfo, action, isCurrent }) => {
     >
       <div className="flex w-3/4 items-center gap-4">
         <div className="w-10 border-2 border-t-0 border-l-0">
-          {levelInfo.id}
+          {levelInfo.id + 1}
         </div>
         <div className="uppercase">{levelInfo.amount} cards</div>
       </div>
