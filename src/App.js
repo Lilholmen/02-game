@@ -10,6 +10,7 @@ import useTime from "./components/hooks/useTime";
 import useCards from "./components/hooks/useCards";
 
 import levels from "./data/levels";
+import GameBoard from "./components/GameBoard/GameBoard";
 
 const App = () => {
   const [currentLevelId, setCurrentLevelId] = useLocalStorage(
@@ -43,27 +44,13 @@ const App = () => {
     stopTimer();
   };
 
-  /* const updateLeaderBoard = () => {
-    const isNewBestTime =
-      leaderBoard[currentLevelId].time === null ||
-      levelTime < leaderBoard[currentLevelId].time;
-    const isNewBestAttempt =
-      leaderBoard[currentLevelId].attempts === null ||
-      levelAttempts < leaderBoard[currentLevelId].attempts;
+  const incrementLevelAttempts = () => {
+    setLevelAttempts((prev) => prev + 1);
+  };
 
-    setLeaderBoard(
-      leaderBoard.map((level) =>
-        level.id === currentLevelId
-          ? {
-              time: isNewBestTime ? levelTime : level.time,
-              attempts: isNewBestAttempt ? levelAttempts : level.attempts,
-            }
-          : level
-      )
-    );
-
-    return [isNewBestTime, isNewBestAttempt];
-  }; */
+  const incrementLevelGuessed = () => {
+    setLevelGuessed((prev) => prev + 1);
+  };
 
   useEffect(() => {
     if (cards.length === 0) {
@@ -96,11 +83,10 @@ const App = () => {
         time={levelTime}
       />
 
-      <Board
-        setAttempts={setLevelAttempts}
-        setGuessed={setLevelGuessed}
-        updateCards={updateCards}
-        cards={cards}
+      <GameBoard
+        levelCardsAmount={currentLevel.amount}
+        incrementAttempts={incrementLevelAttempts}
+        incrementGuessed={incrementLevelGuessed}
         startTimer={startTimer}
       />
 

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-
-//import imagesSrc from "../data/images";
 import CardFace from "./CardFace";
 
 const Card = ({ card, guess, disable }) => {
   const [flipped, setFlipped] = useState(card.isChecked);
+
+  const imgSrc = require(`../../img/mem_0${card.value}.png`);
 
   useEffect(() => {
     if (card.isChecked || card.isGuessed) {
@@ -17,13 +17,7 @@ const Card = ({ card, guess, disable }) => {
   return (
     <button
       className="cursor-pointer [perspective:1000px]"
-      onClick={
-        card.isChecked || card.isGuessed
-          ? () => {}
-          : () => {
-              guess(card);
-            }
-      }
+      onClick={() => guess(card)}
       disabled={disable}
     >
       <div
@@ -39,9 +33,8 @@ const Card = ({ card, guess, disable }) => {
         >
           <img
             className="h-full w-full object-cover"
-            //src={imagesSrc[card.value]}
+            src={imgSrc}
             alt={card.value}
-            style={{ backgroundColor: card.color }}
           />
         </CardFace>
       </div>
