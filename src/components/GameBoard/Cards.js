@@ -1,10 +1,12 @@
-import { useState, useReducer } from "react";
+import { useState, useReducer, useContext } from "react";
 import { reducer, init } from "../../utils/cardsReducer";
+import { cardsThemeContext } from "../../App";
 import Card from "./Card";
 
 const Cards = ({ initialCardsAmount, incrementAttempts, incrementGuessed }) => {
   const [cards, dispatchCards] = useReducer(reducer, initialCardsAmount, init);
   const [isDisabled, setIsDisabled] = useState(false);
+  const cardsTheme = useContext(cardsThemeContext);
 
   const onCheck = cards.find((card) => card.isChecked);
 
@@ -35,6 +37,7 @@ const Cards = ({ initialCardsAmount, incrementAttempts, incrementGuessed }) => {
           card={card}
           guess={dispatchCommand}
           disable={isDisabled}
+          theme={cardsTheme}
         />
       ))}
     </div>

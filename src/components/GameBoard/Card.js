@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import CardFace from "./CardFace";
 
-const Card = ({ card, guess, disable }) => {
+const Card = ({ card, guess, disable, theme }) => {
   const [flipped, setFlipped] = useState(card.isChecked);
 
-  const imgSrc = require(`../../img/mem_0${card.value}.png`);
+  const imgSrc = require(`../../img/${theme}/${card.value}.png`);
 
   useEffect(() => {
     if (card.isChecked || card.isGuessed) {

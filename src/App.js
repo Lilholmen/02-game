@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 import Header from "./components/Header";
-import Board from "./components/Board";
 import Footer from "./components/Footer";
 import Modal from "./components/Modal";
 
@@ -11,6 +10,9 @@ import useCards from "./components/hooks/useCards";
 
 import levels from "./data/levels";
 import GameBoard from "./components/GameBoard/GameBoard";
+import THEMES from "./data/themes";
+
+export const cardsThemeContext = createContext(null);
 
 const App = () => {
   const [currentLevelId, setCurrentLevelId] = useLocalStorage(
@@ -30,6 +32,13 @@ const App = () => {
       attempts: null,
     }))
   );
+
+  const [cardsThemeValue, setCardsThemeValue] = useState(THEMES[0]);
+
+  const changeCardsThemeHandler = (themeId) => {
+    if (themeId < THEMES.length) setCardsThemeValue(THEMES[themeId]);
+    else console.log("Unavalible theme!");
+  };
 
   const currentLevel = levels[currentLevelId];
   const completed = currentLevel.pairs === levelGuessed;
@@ -74,21 +83,25 @@ const App = () => {
         </>
       ) : null}
 
-      <Header
-        currentLevel={currentLevel}
-        attempts={levelAttempts}
-        guessed={levelGuessed}
-        switchLevel={switchLevel}
-        levels={levels}
-        time={levelTime}
-      />
+      <cardsThemeContext.Provider value={changeCardsThemeHandler}>
+        <Header
+          currentLevel={currentLevel}
+          attempts={levelAttempts}
+          guessed={levelGuessed}
+          switchLevel={switchLevel}
+          levels={levels}
+          time={levelTime}
+        />
+      </cardsThemeContext.Provider>
 
-      <GameBoard
-        levelCardsAmount={currentLevel.amount}
-        incrementAttempts={incrementLevelAttempts}
-        incrementGuessed={incrementLevelGuessed}
-        startTimer={startTimer}
-      />
+      <cardsThemeContext.Provider value={cardsThemeValue}>
+        <GameBoard
+          levelCardsAmount={currentLevel.amount}
+          incrementAttempts={incrementLevelAttempts}
+          incrementGuessed={incrementLevelGuessed}
+          startTimer={startTimer}
+        />
+      </cardsThemeContext.Provider>
 
       <Footer />
     </div>
