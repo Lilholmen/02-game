@@ -1,9 +1,9 @@
-import Header from "./components/Header";
+import Header from "./components/Header/Header";
 import GameBoard from "./components/GameBoard/GameBoard";
 import Footer from "./components/Footer";
 
 import { LevelContextProvider } from "./contexts/LevelContext";
-import { CardsThemeContextProvider } from "./contexts/CardsThemeContext";
+import { CardsContextProvider } from "./contexts/CardsContext";
 import useLocalStorage from "./hooks/useLocalStorage";
 
 import levels from "./data/levels";
@@ -22,13 +22,13 @@ const App = () => {
       {console.log("render app")}
 
       <LevelContextProvider>
-        <CardsThemeContextProvider>
+        <CardsContextProvider>
           <Header />
           <GameBoard />
-        </CardsThemeContextProvider>
+        </CardsContextProvider>
       </LevelContextProvider>
 
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

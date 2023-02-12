@@ -1,7 +1,23 @@
-export const reducer = (cardsState, action) => {
+const reducer = (cardsState, action) => {
   switch (action.type) {
+    case "INITIATE_CARDS":
+      const initialCards = [];
+
+      for (let i = 0; i < action.initialAmount; i++) {
+        initialCards.push({
+          id: i + 1,
+          value: Math.floor(i / 2),
+          isChecked: false,
+          isGuessed: false,
+        });
+      }
+
+      initialCards.sort(() => Math.random() - 0.5);
+
+      return initialCards;
+
     case "RESTART":
-      console.log("restaetr");
+      console.log("restart");
       const temp = [...cardsState];
       temp.sort(() => Math.random() - 0.5);
       console.log(temp);
@@ -33,19 +49,4 @@ export const reducer = (cardsState, action) => {
   }
 };
 
-export const init = (initialAmount) => {
-  const initialCards = [];
-
-  for (let i = 0; i < initialAmount; i++) {
-    initialCards.push({
-      id: i + 1,
-      value: Math.floor(i / 2),
-      isChecked: false,
-      isGuessed: false,
-    });
-  }
-
-  initialCards.sort(() => Math.random() - 0.5);
-
-  return initialCards;
-};
+export default reducer;

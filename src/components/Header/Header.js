@@ -1,34 +1,49 @@
-import React from "react";
+import { useState } from "react";
 import {
   BsGearFill,
   BsGridFill,
   BsQuestionCircle,
   BsCheckCircle,
 } from "react-icons/bs";
+import { useLevel } from "../../contexts/LevelContext";
+import LevelsAndSettingsMenu from "./LevelsAndSettingsMenu";
 import Timer from "./Timer";
 
-const Header = ({ attempts, guessed }) => {
+const Header = () => {
+  const [showMenu, setShowMenu] = useState(false);
+  const level = useLevel();
+
+  const toggleMenu = () => {
+    setShowMenu((prev) => !prev);
+  };
+
   return (
-    <header className="flex bg-white text-3xl text-zinc-500 dark:bg-stone-700 dark:text-stone-300">
-      <div className="bg-zinc-500 px-3 py-3 text-white dark:bg-stone-800 dark:text-stone-300">
-        <BsGridFill />
-      </div>
-      <div className="flex w-full items-center px-2">
-        <div className="flex w-1/3 items-center gap-1">
+    <header className="bg-white text-zinc-500 dark:bg-stone-700 dark:text-stone-300">
+      <ul className="flex text-3xl">
+        <li className="flex-none">
+          <button
+            className="flex items-center justify-center bg-zinc-500 px-3 py-3 text-white dark:bg-stone-800 dark:text-stone-300"
+            onClick={toggleMenu}
+          >
+            <BsGridFill />
+          </button>
+          {showMenu ? <LevelsAndSettingsMenu toggleMenu={toggleMenu} /> : null}
+        </li>
+
+        <li className="flex w-16 flex-none items-center gap-1 px-2">
           <BsQuestionCircle className="text-xl" />
-          {attempts}
-        </div>
-        <div className="w-1/3 font-mono-time text-2xl">
-          <Timer />
-        </div>
-        <div className="flex w-1/3 items-center justify-end gap-1">
+          {level.attempts}
+        </li>
+
+        <li className="flex w-16 flex-none items-center justify-end gap-1 px-2">
           <BsCheckCircle className="text-xl" />
-          {guessed}
-        </div>
-      </div>
-      <div className="bg-zinc-500 px-3 py-3 text-white dark:bg-stone-800 dark:text-stone-300">
-        <BsGearFill />
-      </div>
+          {level.guessed}
+        </li>
+
+        <li className="flex flex-1 items-center justify-end pr-3 font-mono-time text-2xl">
+          <Timer />
+        </li>
+      </ul>
       {console.log("render header")}
     </header>
   );
