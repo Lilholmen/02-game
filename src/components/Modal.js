@@ -1,18 +1,17 @@
 import { useState } from "react";
+import representTime from "../utils/representTime";
 import ModalButton from "./UI/ModalButton";
-import Time from "./UI/Time";
 
 const Modal = ({
-  switchLevel,
+  changeLevel,
   attempts,
   currentLevel,
   best,
   time,
   isLastLevel,
+  restartLevel,
 }) => {
   const [showModal, setShowModal] = useState(true);
-
-  const message = "You WIN!";
 
   return (
     <>
@@ -22,7 +21,7 @@ const Modal = ({
             <div className="relative mx-auto my-6 w-auto">
               <div className="relative flex w-full flex-col rounded-xl bg-slate-800 text-slate-200">
                 <div className="border-b border-amber-500 p-5">
-                  <h3 className="text-5xl font-bold">{message}</h3>
+                  <h3 className="text-5xl font-bold">You Win!</h3>
                 </div>
 
                 <div className="flex-auto p-6">
@@ -34,12 +33,8 @@ const Modal = ({
                     <div className="flex flex-col">
                       <div className="border-b text-xl">Time</div>
                       <div className="flex justify-between text-3xl text-amber-300">
-                        <div>
-                          <Time value={time} />
-                        </div>
-                        <div>
-                          <Time value={best.time || time} />
-                        </div>
+                        <div>{representTime(time)}</div>
+                        <div>{representTime(time)}</div>
                       </div>
                     </div>
 
@@ -47,7 +42,7 @@ const Modal = ({
                       <div className="border-b text-xl">Attempts</div>
                       <div className="flex justify-between text-3xl text-amber-300">
                         <div>{attempts}</div>
-                        <div>{best.attempts || attempts}</div>
+                        <div>{attempts}</div>
                       </div>
                     </div>
                   </div>
@@ -63,14 +58,14 @@ const Modal = ({
                   <ModalButton
                     isDisabled={false}
                     action={() => {
-                      switchLevel(currentLevel.id);
+                      restartLevel();
                     }}
                   >
                     Restart
                   </ModalButton>
                   <ModalButton
                     isDisabled={isLastLevel}
-                    action={() => switchLevel(currentLevel.id + 1)}
+                    action={() => changeLevel(currentLevel.id + 1)}
                   >
                     Next Level
                   </ModalButton>
