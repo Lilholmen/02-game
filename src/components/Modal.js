@@ -9,10 +9,9 @@ const Modal = ({
   best,
   time,
   isLastLevel,
+  restartLevel,
 }) => {
   const [showModal, setShowModal] = useState(true);
-
-  const message = "You WIN!";
 
   return (
     <>
@@ -22,7 +21,7 @@ const Modal = ({
             <div className="relative mx-auto my-6 w-auto">
               <div className="relative flex w-full flex-col rounded-xl bg-slate-800 text-slate-200">
                 <div className="border-b border-amber-500 p-5">
-                  <h3 className="text-5xl font-bold">{message}</h3>
+                  <h3 className="text-5xl font-bold">You Win!</h3>
                 </div>
 
                 <div className="flex-auto p-6">
@@ -59,7 +58,7 @@ const Modal = ({
                   <ModalButton
                     isDisabled={false}
                     action={() => {
-                      changeLevel(currentLevel.id);
+                      restartLevel();
                     }}
                   >
                     Restart

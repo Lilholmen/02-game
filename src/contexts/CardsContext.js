@@ -1,6 +1,9 @@
-import { createContext, useContext, useReducer, useState } from "react";
-import THEMES from "../data/themes";
+import { createContext, useContext, useReducer } from "react";
+
+import useLocalStorage from "../hooks/useLocalStorage";
 import reducer from "../utils/cardsReducer";
+
+import THEMES from "../data/themes";
 
 const CardsContext = createContext(null);
 
@@ -10,7 +13,7 @@ export const useCards = () => {
 
 export const CardsContextProvider = ({ children }) => {
   const [cardsState, cardsDispatch] = useReducer(reducer, []);
-  const [cardsTheme, setCardsTheme] = useState(THEMES[0]);
+  const [cardsTheme, setCardsTheme] = useLocalStorage("cardsTheme", THEMES[0]);
 
   const cardsThemeHandler = (themeId) => {
     if (themeId < THEMES.length) setCardsTheme(THEMES[themeId]);

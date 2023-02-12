@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+
 import useLocalStorage from "../hooks/useLocalStorage";
 
 import levels from "../data/levels";
@@ -65,6 +66,7 @@ export const LevelContextProvider = ({ children }) => {
         incrementAttempts,
         incrementGuessed,
         restartHandler,
+        setRestartInitiated,
       }}
     >
       {children}

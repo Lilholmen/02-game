@@ -11,7 +11,7 @@ import Timer from "./Timer";
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const level = useLevel();
+  const { attempts, guessed } = useLevel();
 
   const toggleMenu = () => {
     setShowMenu((prev) => !prev);
@@ -32,12 +32,12 @@ const Header = () => {
 
         <li className="flex w-16 flex-none items-center gap-1 px-2">
           <BsQuestionCircle className="text-xl" />
-          {level.attempts}
+          {attempts}
         </li>
 
         <li className="flex w-16 flex-none items-center justify-end gap-1 px-2">
           <BsCheckCircle className="text-xl" />
-          {level.guessed}
+          {guessed}
         </li>
 
         <li className="flex flex-1 items-center justify-end pr-3 font-mono-time text-2xl">

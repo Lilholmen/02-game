@@ -12,7 +12,7 @@ const GameBoard = () => {
     >
       {console.log("render game board")}
       {level.restartInitiated ? (
-        level.restartHandler(false)
+        level.setRestartInitiated(false)
       ) : (
         <Cards
           key={level.currentLevel.amount}
@@ -29,6 +29,7 @@ const GameBoard = () => {
           best={null}
           time={level.timeToComplete}
           isLastLevel={level.currentLevelId === 4}
+          restartLevel={level.restartHandler}
         />
       ) : null}
     </section>
