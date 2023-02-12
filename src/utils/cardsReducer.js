@@ -1,8 +1,10 @@
 export const reducer = (cardsState, action) => {
   switch (action.type) {
     case "RESTART":
+      console.log("restaetr");
       const temp = [...cardsState];
       temp.sort(() => Math.random() - 0.5);
+      console.log(temp);
       return temp;
 
     case "FIRST_CHECKED":

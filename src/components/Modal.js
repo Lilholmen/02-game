@@ -1,9 +1,9 @@
 import { useState } from "react";
+import representTime from "../utils/representTime";
 import ModalButton from "./UI/ModalButton";
-import Time from "./UI/Time";
 
 const Modal = ({
-  switchLevel,
+  changeLevel,
   attempts,
   currentLevel,
   best,
@@ -34,12 +34,8 @@ const Modal = ({
                     <div className="flex flex-col">
                       <div className="border-b text-xl">Time</div>
                       <div className="flex justify-between text-3xl text-amber-300">
-                        <div>
-                          <Time value={time} />
-                        </div>
-                        <div>
-                          <Time value={best.time || time} />
-                        </div>
+                        <div>{representTime(time)}</div>
+                        <div>{representTime(time)}</div>
                       </div>
                     </div>
 
@@ -47,7 +43,7 @@ const Modal = ({
                       <div className="border-b text-xl">Attempts</div>
                       <div className="flex justify-between text-3xl text-amber-300">
                         <div>{attempts}</div>
-                        <div>{best.attempts || attempts}</div>
+                        <div>{attempts}</div>
                       </div>
                     </div>
                   </div>
@@ -63,14 +59,14 @@ const Modal = ({
                   <ModalButton
                     isDisabled={false}
                     action={() => {
-                      switchLevel(currentLevel.id);
+                      changeLevel(currentLevel.id);
                     }}
                   >
                     Restart
                   </ModalButton>
                   <ModalButton
                     isDisabled={isLastLevel}
-                    action={() => switchLevel(currentLevel.id + 1)}
+                    action={() => changeLevel(currentLevel.id + 1)}
                   >
                     Next Level
                   </ModalButton>

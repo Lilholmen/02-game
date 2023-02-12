@@ -1,10 +1,10 @@
-import { useContext } from "react";
-import { cardsThemeContext } from "../App";
 import THEMES from "../data/themes";
+import { useCardsTheme } from "../contexts/CardsThemeContext";
 import Level from "./Level";
+import levels from "../data/levels";
 
-const LevelMenu = ({ switchLevel, levels, currentLevel }) => {
-  const changeTheme = useContext(cardsThemeContext);
+const LevelMenu = ({ switchLevel, currentLevel }) => {
+  const { setTheme } = useCardsTheme();
 
   return (
     <div className="fixed top-14 z-10 h-full w-full border-stone-200 bg-stone-600 text-5xl sm:top-20 sm:text-6xl md:h-max md:w-2/3 lg:top-28 lg:w-max lg:border-b-8 lg:border-r-8">
@@ -29,7 +29,7 @@ const LevelMenu = ({ switchLevel, levels, currentLevel }) => {
       <ul>
         {THEMES.map((theme, index) => (
           <li key={theme}>
-            <button onClick={() => changeTheme(index)}>
+            <button onClick={() => setTheme(index)}>
               {theme.toUpperCase()}
             </button>
           </li>
