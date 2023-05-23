@@ -1,37 +1,28 @@
-import { useLevel } from "../../contexts/LevelContext";
-import Modal from "../Modal";
 import Cards from "./Cards";
+import Modal from "../Modal";
+
+import { useLevel } from "../../contexts/LevelContext";
 
 const GameBoard = () => {
-  const level = useLevel();
+  const {
+    currentLevel,
+    setRestartInitiated,
+    restartInitiated,
+    isLevelCompleted,
+  } = useLevel();
 
   return (
     <section
       className="h-full bg-stone-200 py-6"
       onClick={() => {}}
     >
-      {console.log("render game board")}
-      {level.restartInitiated ? (
-        level.setRestartInitiated(false)
+      {restartInitiated ? (
+        setRestartInitiated(false)
       ) : (
-        <Cards
-          key={level.currentLevel.amount}
-          initialCardsAmount={level.currentLevel.amount}
-          incrementAttempts={level.incrementAttempts}
-          incrementGuessed={level.incrementGuessed}
-        />
+        <Cards key={currentLevel.amount} />
       )}
-      {level.isLevelCompleted ? (
-        <Modal
-          changeLevel={level.changeLevel}
-          attempts={level.attempts}
-          currentLevel={level.currentLevel}
-          best={null}
-          time={level.timeToComplete}
-          isLastLevel={level.currentLevelId === 4}
-          restartLevel={level.restartHandler}
-        />
-      ) : null}
+
+      {isLevelCompleted ? <Modal /> : null}
     </section>
   );
 };

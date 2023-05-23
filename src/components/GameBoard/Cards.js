@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useCards } from "../../contexts/CardsContext";
+import { useLevel } from "../../contexts/LevelContext";
 import Card from "./Card";
 
-const Cards = ({ initialCardsAmount, incrementAttempts, incrementGuessed }) => {
+const Cards = () => {
   const [isDisabled, setIsDisabled] = useState(false);
   const { cardsTheme, cardsState, cardsDispatch } = useCards();
+  const { incrementAttempts, incrementGuessed, currentLevel } = useLevel();
 
   const onCheck = cardsState.find((card) => card.isChecked);
 
@@ -30,12 +32,12 @@ const Cards = ({ initialCardsAmount, incrementAttempts, incrementGuessed }) => {
   useEffect(() => {
     cardsDispatch({
       type: "INITIATE_CARDS",
-      initialAmount: initialCardsAmount,
+      initialAmount: currentLevel.amount,
     });
   }, []);
 
   return (
-    <div className="grid h-full auto-rows-auto grid-cols-4 gap-2 lg:gap-4 lg:px-8">
+    <div className={"container mx-auto grid h-full grid-cols-4 gap-2"}>
       {cardsState.map((card) => (
         <Card
           key={card.id}

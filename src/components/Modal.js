@@ -1,17 +1,18 @@
 import { useState } from "react";
+import { useLevel } from "../contexts/LevelContext";
 import representTime from "../utils/representTime";
 import ModalButton from "./UI/ModalButton";
 
-const Modal = ({
-  changeLevel,
-  attempts,
-  currentLevel,
-  best,
-  time,
-  isLastLevel,
-  restartLevel,
-}) => {
+const Modal = () => {
   const [showModal, setShowModal] = useState(true);
+
+  const {
+    currentLevel,
+    timeToComplete,
+    attempts,
+    changeLevel,
+    restartHandler,
+  } = useLevel();
 
   return (
     <>
@@ -33,8 +34,8 @@ const Modal = ({
                     <div className="flex flex-col">
                       <div className="border-b text-xl">Time</div>
                       <div className="flex justify-between text-3xl text-amber-300">
-                        <div>{representTime(time)}</div>
-                        <div>{representTime(time)}</div>
+                        <div>{representTime(timeToComplete)}</div>
+                        <div>{representTime(timeToComplete)}</div>
                       </div>
                     </div>
 
@@ -58,13 +59,13 @@ const Modal = ({
                   <ModalButton
                     isDisabled={false}
                     action={() => {
-                      restartLevel();
+                      restartHandler();
                     }}
                   >
                     Restart
                   </ModalButton>
                   <ModalButton
-                    isDisabled={isLastLevel}
+                    isDisabled={currentLevel.id === 4}
                     action={() => changeLevel(currentLevel.id + 1)}
                   >
                     Next Level
