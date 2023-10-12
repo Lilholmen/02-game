@@ -2,6 +2,8 @@
 
 This project was created durning the course **React-academy** by **CDG** in 2023.
 
+text
+
 App available online via the header link
 
 ## Game rules
